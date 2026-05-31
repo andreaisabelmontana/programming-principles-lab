@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#4338CA" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>programming-principles-lab · visual paradigms, evaluation, scope &amp; data</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, { delimiters: [{left:'$$', right:'$$', display:true},{left:'$', right:'$', display:false}], ignoredTags: ['option','script','textarea'] })"></script>
+
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="title">
+        <span class="dot"></span><strong>programming-principles-lab</strong>
+        <span class="sub">execution · functions · scope · data · paradigms</span>
+      </div>
+      <nav>
+        <a href="#exec">execution</a>
+        <a href="#flow">flow</a>
+        <a href="#stack">call stack</a>
+        <a href="#memo">memoization</a>
+        <a href="#scope">scope</a>
+        <a href="#hof">map/filter</a>
+        <a href="#lazy">lazy eval</a>
+        <a href="#mut">mutability</a>
+        <a href="#hash">hash maps</a>
+        <a href="#numpy">NumPy</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- 1. EXECUTION MODEL — Module 1 (Session 1) ------------------- -->
+      <section class="demo" id="exec">
+        <h2>1. How code runs — compiled vs interpreted</h2>
+        <p class="cap">Session 1's hardware/software interface. A compiler translates the <em>whole</em> source to
+          machine code <em>once</em>, then the CPU runs it; an interpreter walks the source statement by statement
+          <em>every</em> run. Step the pipeline and watch where time is spent.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-exec" width="600" height="300"></canvas></div>
+          <div class="ctrls">
+            <label>model
+              <select id="ex-mode">
+                <option value="compiled" selected>compiled (e.g. C)</option>
+                <option value="interpreted">interpreted (e.g. Python)</option>
+              </select>
+            </label>
+            <label>source lines <span class="mono" id="ex-nv">4</span>
+              <input id="ex-n" type="range" min="2" max="6" step="1" value="4"/></label>
+            <div class="readout"><span>phase</span><strong id="ex-phase" class="mono">—</strong></div>
+            <div class="readout"><span>CPU instructions run</span><strong id="ex-cpu" class="mono">—</strong></div>
+            <div class="readout"><span>portable binary?</span><strong id="ex-port" class="mono big">—</strong></div>
+            <button id="ex-step" class="btn">step</button>
+            <button id="ex-reset" class="btn">reset</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. FLOW CONTROL & LOOPS — Module 1 (Sessions 3-4) ----------- -->
+      <section class="demo" id="flow">
+        <h2>2. Flow control &amp; loops</h2>
+        <p class="cap">A <span class="mono">for</span> loop over <span class="mono">range(n)</span> with an
+          <span class="mono">if</span> guard. Choose what happens when the guard fires —
+          <span class="mono">continue</span> skips the rest of the body, <span class="mono">break</span> exits the loop.
+          Step to trace the control flow and the running total.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-flow" width="600" height="300"></canvas></div>
+          <div class="ctrls">
+            <label>n <span class="mono" id="fl-nv">6</span>
+              <input id="fl-n" type="range" min="3" max="10" step="1" value="6"/></label>
+            <label>guard: skip/stop when i is
+              <select id="fl-cond">
+                <option value="odd" selected>odd</option>
+                <option value="even">even</option>
+                <option value="ge3">&ge; 3</option>
+              </select>
+            </label>
+            <label>on guard
+              <select id="fl-act">
+                <option value="continue" selected>continue (skip)</option>
+                <option value="break">break (exit)</option>
+              </select>
+            </label>
+            <div class="readout"><span>i</span><strong id="fl-i" class="mono">—</strong></div>
+            <div class="readout"><span>total</span><strong id="fl-total" class="mono big">0</strong></div>
+            <button id="fl-step" class="btn">step</button>
+            <button id="fl-run" class="btn">run</button>
+            <button id="fl-reset" class="btn">reset</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. RECURSION — CALL STACK — Module 1 (Session 6) ------------ -->
+      <section class="demo" id="stack">
+        <h2>3. Recursion &amp; the call stack</h2>
+        <p class="cap">Session 6 — a function calling itself. Each call pushes a <em>frame</em> holding its own
+          arguments; frames pop as they return, multiplying results back up. Step through
+          $\texttt{fact}(n)$ or $\texttt{fib}(n)$ and watch the stack grow and unwind.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-stack" width="600" height="340"></canvas></div>
+          <div class="ctrls">
+            <label>function
+              <select id="st-fn">
+                <option value="fact" selected>factorial(n)</option>
+                <option value="fib">fibonacci(n)</option>
+              </select>
+            </label>
+            <label>n <span class="mono" id="st-nv">4</span>
+              <input id="st-n" type="range" min="1" max="7" step="1" value="4"/></label>
+            <div class="readout"><span>stack depth</span><strong id="st-depth" class="mono">0</strong></div>
+            <div class="readout"><span>max depth</span><strong id="st-max" class="mono">0</strong></div>
+            <div class="readout"><span>result</span><strong id="st-res" class="mono big">—</strong></div>
+            <button id="st-step" class="btn">step</button>
+            <button id="st-run" class="btn">run</button>
+            <button id="st-reset" class="btn">reset</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. RECURSION TREE & MEMOIZATION — Module 1 ------------------ -->
+      <section class="demo" id="memo">
+        <h2>4. Recursion tree &amp; memoization</h2>
+        <p class="cap">Naive $\texttt{fib}(n)$ recomputes the same subproblems exponentially often. Memoizing —
+          caching each result the first time — collapses the tree to $O(n)$ calls. Toggle the cache and compare
+          the call counts.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-memo" width="600" height="340"></canvas></div>
+          <div class="ctrls">
+            <label>n <span class="mono" id="mo-nv">5</span>
+              <input id="mo-n" type="range" min="1" max="8" step="1" value="5"/></label>
+            <label class="check"><input id="mo-cache" type="checkbox"/> memoize (cache results)</label>
+            <div class="readout"><span>fib(n)</span><strong id="mo-val" class="mono">—</strong></div>
+            <div class="readout"><span>function calls</span><strong id="mo-calls" class="mono big">—</strong></div>
+            <div class="readout"><span>naive calls</span><strong id="mo-naive" class="mono">—</strong></div>
+            <p class="hint">Green nodes were computed; faint nodes were served from the cache.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. SCOPE & CLOSURES — Module 1 (Session 7) ------------------ -->
+      <section class="demo" id="scope">
+        <h2>5. Scope, lifetime &amp; closures</h2>
+        <p class="cap">Session 7 — local vs global names and side effects. Python resolves a name by the
+          <strong>LEGB</strong> rule: Local, Enclosing, Global, Built-in. Pick a scenario and trace which binding
+          each reference resolves to, including a closure that captures an enclosing variable.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-scope" width="600" height="320"></canvas></div>
+          <div class="ctrls">
+            <label>scenario
+              <select id="sc-case">
+                <option value="local" selected>local shadows global</option>
+                <option value="global">read global (no local)</option>
+                <option value="closure">closure captures enclosing</option>
+                <option value="nonlocal">global keyword (rebinds)</option>
+              </select>
+            </label>
+            <div class="readout"><span>x resolves via</span><strong id="sc-via" class="mono big">—</strong></div>
+            <div class="readout"><span>value used inside</span><strong id="sc-inner" class="mono">—</strong></div>
+            <div class="readout"><span>global x after call</span><strong id="sc-after" class="mono">—</strong></div>
+            <p class="hint" id="sc-note"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. HIGHER-ORDER FUNCTIONS — Module 1 (Session 7) ----------- -->
+      <section class="demo" id="hof">
+        <h2>6. Higher-order functions — map · filter · reduce</h2>
+        <p class="cap">Session 7's functional tools. A <span class="mono">lambda</span> is applied across a list:
+          <span class="mono">map</span> transforms every element, <span class="mono">filter</span> keeps those where the
+          predicate is true, <span class="mono">reduce</span> folds them to one value. Step to see each element flow
+          through the pipeline.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-hof" width="600" height="300"></canvas></div>
+          <div class="ctrls">
+            <label>operation
+              <select id="hf-op">
+                <option value="map" selected>map: x =&gt; x*x</option>
+                <option value="filter">filter: x =&gt; x % 2 == 0</option>
+                <option value="reduce">reduce: (a,x) =&gt; a + x</option>
+              </select>
+            </label>
+            <label>input list <span class="mono" id="hf-nv">6</span> items
+              <input id="hf-n" type="range" min="3" max="9" step="1" value="6"/></label>
+            <div class="readout"><span>processed</span><strong id="hf-proc" class="mono">—</strong></div>
+            <div class="readout"><span>output</span><strong id="hf-out" class="mono big">—</strong></div>
+            <button id="hf-step" class="btn">step</button>
+            <button id="hf-run" class="btn">run</button>
+            <button id="hf-reset" class="btn">reset</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. LAZY EVALUATION & GENERATORS — Module 1 (Session 7) ----- -->
+      <section class="demo" id="lazy">
+        <h2>7. Eager vs lazy evaluation (generators)</h2>
+        <p class="cap">A list builds <em>all</em> its values up front; a generator with <span class="mono">yield</span>
+          produces them one at a time, only when pulled. With a <span class="mono">take(k)</span> downstream, the lazy
+          pipeline computes just what it needs. Step the consumer and compare work done.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-lazy" width="600" height="300"></canvas></div>
+          <div class="ctrls">
+            <label>strategy
+              <select id="lz-mode">
+                <option value="eager" selected>eager (list comprehension)</option>
+                <option value="lazy">lazy (generator)</option>
+              </select>
+            </label>
+            <label>source size <span class="mono" id="lz-nv">8</span>
+              <input id="lz-n" type="range" min="4" max="12" step="1" value="8"/></label>
+            <label>take(k) <span class="mono" id="lz-kv">3</span>
+              <input id="lz-k" type="range" min="1" max="6" step="1" value="3"/></label>
+            <div class="readout"><span>elements computed</span><strong id="lz-comp" class="mono big">—</strong></div>
+            <div class="readout"><span>elements wasted</span><strong id="lz-waste" class="mono">—</strong></div>
+            <button id="lz-step" class="btn">pull next</button>
+            <button id="lz-reset" class="btn">reset</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. MUTABILITY & PASS-BY-REFERENCE — Module 2 (Session 12) -- -->
+      <section class="demo" id="mut">
+        <h2>8. Mutability &amp; function side effects</h2>
+        <p class="cap">Session 12 — "modify in-place" vs "return a new object". Python passes object
+          <em>references</em>: mutating a list inside a function is visible to the caller, but rebinding the name, or
+          working on a copy, is not. Run each variant and watch the caller's list.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-mut" width="600" height="300"></canvas></div>
+          <div class="ctrls">
+            <label>function body
+              <select id="mu-mode">
+                <option value="inplace" selected>xs.append(99)  — mutate</option>
+                <option value="rebind">xs = xs + [99]  — rebind</option>
+                <option value="copy">ys = xs[:]; ys.append(99)</option>
+                <option value="int">n = n + 1  — int (immutable)</option>
+              </select>
+            </label>
+            <div class="readout"><span>same object?</span><strong id="mu-same" class="mono">—</strong></div>
+            <div class="readout"><span>caller changed?</span><strong id="mu-changed" class="mono big">—</strong></div>
+            <button id="mu-run" class="btn">call function</button>
+            <button id="mu-reset" class="btn">reset</button>
+            <p class="hint" id="mu-note"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. HASH MAPS / DICTIONARIES — Module 2 (Session 10) -------- -->
+      <section class="demo" id="hash">
+        <h2>9. Dictionaries as hash maps</h2>
+        <p class="cap">Session 10 — key/value pairs. A dict hashes each key, then <span class="mono">hash % buckets</span>
+          chooses a slot. Two keys landing in the same slot <em>collide</em> and chain together — which is why average
+          lookup is $O(1)$ but degrades when buckets fill. Add keys and watch them distribute.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-hash" width="600" height="320"></canvas></div>
+          <div class="ctrls">
+            <label>buckets <span class="mono" id="ha-bv">8</span>
+              <input id="ha-b" type="range" min="4" max="12" step="1" value="8"/></label>
+            <label>key
+              <input id="ha-key" type="text" value="cat" spellcheck="false"/></label>
+            <div class="readout"><span>hash(key)</span><strong id="ha-hash" class="mono">—</strong></div>
+            <div class="readout"><span>slot = hash % buckets</span><strong id="ha-slot" class="mono big">—</strong></div>
+            <div class="readout"><span>load factor</span><strong id="ha-load" class="mono">—</strong></div>
+            <div class="readout"><span>collisions</span><strong id="ha-coll" class="mono">—</strong></div>
+            <button id="ha-add" class="btn">put key</button>
+            <button id="ha-clear" class="btn">clear</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10. NUMPY VECTORIZATION & BROADCASTING — Module 4 --------- -->
+      <section class="demo" id="numpy">
+        <h2>10. NumPy — vectorization &amp; broadcasting</h2>
+        <p class="cap">Module 4 — array programming. A vectorized op applies element-wise across a whole array at once;
+          <em>broadcasting</em> stretches a smaller shape to match without copying. Pick operands and see which cells
+          combine and whether the shapes are broadcast-compatible.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-numpy" width="600" height="320"></canvas></div>
+          <div class="ctrls">
+            <label>left operand
+              <select id="np-a">
+                <option value="m33" selected>3×3 matrix</option>
+                <option value="r13">1×3 row</option>
+                <option value="c31">3×1 column</option>
+              </select>
+            </label>
+            <label>right operand
+              <select id="np-b">
+                <option value="scalar" selected>scalar</option>
+                <option value="r13">1×3 row</option>
+                <option value="c31">3×1 column</option>
+                <option value="m33">3×3 matrix</option>
+                <option value="r12">1×2 row (bad)</option>
+              </select>
+            </label>
+            <label>op
+              <select id="np-op">
+                <option value="add" selected>+ (add)</option>
+                <option value="mul">× (multiply)</option>
+              </select>
+            </label>
+            <div class="readout"><span>result shape</span><strong id="np-shape" class="mono big">—</strong></div>
+            <div class="readout"><span>broadcastable?</span><strong id="np-ok" class="mono">—</strong></div>
+            <p class="hint" id="np-note"></p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>programming-principles-lab — Andrea Montana · IE BCSAI</span>
+      <span class="more">
+        <a href="https://github.com/andreaisabelmontana/discrete-math-lab"   target="_blank">discrete-math-lab</a>
+        <a href="https://github.com/andreaisabelmontana/prob-stats-lab"      target="_blank">prob-stats-lab</a>
+        <a href="https://github.com/andreaisabelmontana/business-lab"        target="_blank">business-lab</a>
+        <a href="https://github.com/andreaisabelmontana/research-methods-lab" target="_blank">research-methods-lab</a>
+        <a href="https://github.com/andreaisabelmontana/big-history-lab"     target="_blank">big-history-lab</a>
+        <a href="https://github.com/andreaisabelmontana/programming-principles-lab" target="_blank">source</a>
+      </span>
+    </footer>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
