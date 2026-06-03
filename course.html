@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#4338CA" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>programming-principles-lab · course outline &amp; syllabus structure</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="./style.css" />
+
+    <style>
+      /* course.html — reuses the *-lab :root tokens; only adds layout
+         primitives this page needs (meta grid, % bars, timeline). */
+      .lead { color: var(--ink-soft); font-size: 0.9rem; margin: 0 0 0.85rem; }
+      .lead + .lead { margin-top: -0.4rem; }
+
+      /* meta grid */
+      .meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.6rem;
+        margin-top: 0.4rem;
+      }
+      .meta .cell {
+        border: 1px solid var(--rule);
+        border-radius: 6px;
+        padding: 0.5rem 0.65rem;
+        background: var(--paper);
+      }
+      .meta .cell .k { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; }
+      .meta .cell .v { color: var(--ink); font-weight: 700; font-size: 0.9rem; margin-top: 0.15rem; }
+      .meta .cell .v.mono { font-family: var(--font-mono); font-weight: 600; }
+
+      /* objective list */
+      ul.obj { list-style: none; margin: 0.3rem 0 0; padding: 0; display: grid; gap: 0.45rem; }
+      ul.obj li { position: relative; padding-left: 1.3rem; color: var(--ink-soft); font-size: 0.86rem; }
+      ul.obj li::before {
+        content: ''; position: absolute; left: 0; top: 0.45em;
+        width: 8px; height: 8px; border-radius: 2px; background: var(--accent);
+      }
+      ul.obj li strong { color: var(--ink); font-weight: 600; }
+      .subhead { font-weight: 700; color: var(--ink); font-size: 0.82rem; margin: 0.9rem 0 0.3rem; text-transform: uppercase; letter-spacing: 0.04em; }
+
+      /* percentage bars */
+      .bars { display: grid; gap: 0.7rem; margin-top: 0.4rem; }
+      .bar-row { display: grid; grid-template-columns: minmax(150px, 1fr) 2.2fr auto; gap: 0.6rem; align-items: center; }
+      .bar-row .lab { color: var(--ink-soft); font-size: 0.84rem; font-weight: 500; }
+      .bar-track { background: var(--rule); border-radius: 999px; height: 9px; overflow: hidden; }
+      .bar-fill { height: 100%; background: var(--accent); border-radius: 999px; }
+      .bar-row .pct { font-family: var(--font-mono); font-weight: 600; color: var(--accent); font-size: 0.84rem; text-align: right; min-width: 3.2em; }
+      .bar-note { color: var(--muted); font-size: 0.76rem; margin: 0.55rem 0 0; }
+      @media (max-width: 560px) { .bar-row { grid-template-columns: 1fr auto; } .bar-track { grid-column: 1 / -1; order: 3; } }
+
+      /* module heading inside program */
+      .module-band {
+        display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap;
+        margin: 0.2rem 0 0.2rem;
+      }
+      .module-band .mtag {
+        font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600;
+        color: var(--accent); background: var(--accent-soft);
+        padding: 0.15em 0.5em; border-radius: 999px;
+      }
+      .module-band .mname { font-weight: 700; font-size: 0.95rem; color: var(--ink); letter-spacing: -0.01em; }
+      .module-desc { color: var(--muted); font-size: 0.82rem; margin: 0 0 0.6rem; }
+
+      /* session timeline */
+      .timeline { position: relative; margin: 0 0 0.4rem; padding-left: 1.4rem; }
+      .timeline::before {
+        content: ''; position: absolute; left: 6px; top: 4px; bottom: 4px;
+        width: 2px; background: var(--rule);
+      }
+      .sess { position: relative; padding: 0.4rem 0 0.85rem; }
+      .sess::before {
+        content: ''; position: absolute; left: -1.4rem; top: 0.7rem;
+        width: 10px; height: 10px; border-radius: 999px;
+        background: var(--paper); border: 2px solid var(--accent);
+      }
+      .sess.exam::before { background: var(--accent); }
+      .sess-head { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+      .sess-num { font-family: var(--font-mono); font-size: 0.74rem; font-weight: 600; color: var(--muted); }
+      .sess-title { font-weight: 700; color: var(--ink); font-size: 0.9rem; }
+      .sess-badge {
+        font-family: var(--font-mono); font-size: 0.66rem; color: var(--muted);
+        border: 1px solid var(--rule); border-radius: 999px; padding: 0.05em 0.45em;
+      }
+      .sess-badge.flag { color: var(--accent); border-color: var(--accent); }
+      .sess-obj { color: var(--ink-soft); font-size: 0.82rem; margin: 0.25rem 0 0.3rem; }
+      ul.topics { list-style: none; margin: 0.15rem 0 0; padding: 0; display: grid; gap: 0.22rem; }
+      ul.topics li { position: relative; padding-left: 0.95rem; color: var(--ink-soft); font-size: 0.81rem; }
+      ul.topics li::before { content: '·'; position: absolute; left: 0.2rem; top: -0.05em; color: var(--accent); font-weight: 700; }
+      ul.topics li code { font-family: var(--font-mono); font-size: 0.92em; background: var(--accent-soft); color: var(--accent); padding: 0 0.25em; border-radius: 3px; }
+
+      /* reading / cross-link tags */
+      .tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.45rem; }
+      .tag {
+        font-size: 0.7rem; font-family: var(--font-mono); font-weight: 500;
+        color: var(--ink-soft); background: var(--bg);
+        border: 1px solid var(--rule); border-radius: 999px;
+        padding: 0.12em 0.55em;
+      }
+      .tag.read::before { content: '📖 '; }
+      a.tag.demo-link { color: var(--accent); border-color: var(--rule-h); }
+      a.tag.demo-link::before { content: '▸ '; }
+      a.tag.demo-link:hover { border-color: var(--accent); background: var(--accent-soft); }
+
+      .prof-note { color: var(--muted); font-size: 0.8rem; margin-top: 0.6rem; }
+      .prof-note strong { color: var(--ink-soft); font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="title">
+        <span class="dot"></span><strong>Principles of Programming</strong>
+        <span class="sub">course outline · 30 sessions · 4 modules</span>
+      </div>
+      <nav>
+        <a href="./index.html">← interactive demos</a>
+        <a href="#overview">overview</a>
+        <a href="#objectives">objectives</a>
+        <a href="#method">methodology</a>
+        <a href="#assess">assessment</a>
+        <a href="#program">program</a>
+        <a href="./SYLLABUS.pdf" target="_blank">syllabus PDF</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- A. OVERVIEW + META -------------------------------------------- -->
+      <section class="demo" id="overview">
+        <h2>Course overview</h2>
+        <p class="lead">An introduction to programming and computational thinking with <strong>Python</strong>:
+          how computers run programs, core syntax and logic, data structures, the real development ecosystem, and
+          numerical/data-oriented programming with NumPy, pandas and Matplotlib. Learning is hands-on and
+          project-oriented, with examples drawn from Computer Science and AI contexts and a final group project.</p>
+        <p class="lead">The course starts with the basics of how code is executed (compiled vs. interpreted) and how to
+          plan with pseudocode, then builds up through functions, scope and data structures, a midterm checkpoint, the
+          developer workflow (CLI, VS Code, environments, OOP), and finishes with array programming, data handling and a
+          final exam. Every concept below is reinforced by the
+          <a href="./index.html">interactive demos</a> in this repo.</p>
+
+        <div class="meta">
+          <div class="cell"><div class="k">Program</div><div class="v">Bachelor in CS &amp; AI (BCSAI)</div></div>
+          <div class="cell"><div class="k">Course code</div><div class="v mono">POP-CSAI.1.M.A</div></div>
+          <div class="cell"><div class="k">Area</div><div class="v">Computer Science</div></div>
+          <div class="cell"><div class="k">Sessions</div><div class="v mono">30 (live in-person)</div></div>
+          <div class="cell"><div class="k">Credits</div><div class="v mono">6.0 ECTS</div></div>
+          <div class="cell"><div class="k">Workload</div><div class="v mono">150 hours</div></div>
+          <div class="cell"><div class="k">Degree course</div><div class="v">First year</div></div>
+          <div class="cell"><div class="k">Semester</div><div class="v mono">2º · AY 25–26</div></div>
+          <div class="cell"><div class="k">Category</div><div class="v">Basic</div></div>
+          <div class="cell"><div class="k">Language</div><div class="v">English</div></div>
+          <div class="cell"><div class="k">Professor</div><div class="v">Nacho Molina Clemente</div></div>
+          <div class="cell"><div class="k">Contact</div><div class="v mono">nmolinac@faculty.ie.edu</div></div>
+        </div>
+        <p class="prof-note"><strong>Office hours:</strong> on request by email. <strong>Tooling:</strong> laptop every
+          session; Google Colab notebooks; VS Code as the primary local environment (set up in English).</p>
+      </section>
+
+      <!-- B. LEARNING OBJECTIVES ---------------------------------------- -->
+      <section class="demo" id="objectives">
+        <h2>Learning objectives</h2>
+        <p class="cap">By the end of the course, students should be able to:</p>
+        <ul class="obj">
+          <li><strong>Write correct, readable Python</strong> to solve structured and open-ended problems from CS and AI contexts.</li>
+          <li>Understand and apply <strong>core programming concepts</strong>: variables, data types, expressions, control flow (conditionals and loops), and functions.</li>
+          <li><strong>Design simple algorithms</strong> using fundamental data structures — lists, tuples, sets, dictionaries — and basic array-based computation (NumPy).</li>
+          <li><strong>Decompose problems</strong> into modular components, define clear interfaces, and reuse code through functions and well-structured modules.</li>
+          <li>Apply <strong>good programming practices</strong>: naming, formatting, basic complexity awareness, and code organization.</li>
+          <li><strong>Debug systematically</strong> by interpreting error messages, using print/debugger workflows, and validating behavior with simple tests.</li>
+          <li>Work with the <strong>Python development ecosystem</strong>: files (text/JSON), libraries, and isolated environments (pip/conda/venv).</li>
+          <li>Handle and analyze tabular data with <strong>pandas</strong>, visualize results with <strong>Matplotlib</strong>, and export reproducible outputs.</li>
+          <li><strong>Translate real-world tasks</strong> into programs that automate workflows, process data, and support basic computational experiments relevant to AI.</li>
+        </ul>
+        <div class="subhead">Transversal skills</div>
+        <ul class="obj">
+          <li><strong>Communicate solutions</strong> — summarize the problem, explain design decisions, present results clearly.</li>
+          <li><strong>Abstraction</strong> — identify patterns, generalize solutions, choose appropriate data representations.</li>
+          <li><strong>Collaboration</strong> in small teams using basic shared-code tooling and version-control workflows.</li>
+          <li><strong>Adaptability</strong> and independence in learning new tools, libraries, and concepts as technology evolves.</li>
+        </ul>
+      </section>
+
+      <!-- C. METHODOLOGY + ASSESSMENT ----------------------------------- -->
+      <section class="demo" id="method">
+        <h2>Teaching methodology &amp; workload</h2>
+        <p class="cap">Each session pairs concise theory with substantial hands-on practice. New concepts are introduced
+          through short lectures, then reinforced with guided examples and exercises from CS/AI contexts. A
+          <em>flipped-classroom</em> approach is used when appropriate — review readings, videos or notebooks before
+          class so in-person time focuses on discussion, live coding, and problem solving. Learning is supported by three
+          recurring activities: <em>in-class exercises</em>, <em>problem sets</em>, and <em>brief announced quizzes</em>.</p>
+
+        <div class="subhead">Learning activity weighting · 150 h total</div>
+        <div class="bars">
+          <div class="bar-row"><span class="lab">Lectures · 30 h</span><span class="bar-track"><span class="bar-fill" style="width:20%"></span></span><span class="pct">20%</span></div>
+          <div class="bar-row"><span class="lab">Discussions · 15 h</span><span class="bar-track"><span class="bar-fill" style="width:10%"></span></span><span class="pct">10%</span></div>
+          <div class="bar-row"><span class="lab">Exercises / async / field · 45 h</span><span class="bar-track"><span class="bar-fill" style="width:30%"></span></span><span class="pct">30%</span></div>
+          <div class="bar-row"><span class="lab">Group work · 30 h</span><span class="bar-track"><span class="bar-fill" style="width:20%"></span></span><span class="pct">20%</span></div>
+          <div class="bar-row"><span class="lab">Individual studying · 30 h</span><span class="bar-track"><span class="bar-fill" style="width:20%"></span></span><span class="pct">20%</span></div>
+        </div>
+        <p class="bar-note">Estimated time a student should dedicate to prepare for and participate in each activity.</p>
+      </section>
+
+      <section class="demo" id="assess">
+        <h2>Assessment</h2>
+        <p class="cap">Continuous evaluation across four components. A <em>minimum of 3.5/10 on the final exam</em> is
+          required to pass the course overall, even if other components are passed.</p>
+        <div class="bars">
+          <div class="bar-row"><span class="lab">Final exam — covers Modules 1–4</span><span class="bar-track"><span class="bar-fill" style="width:50%"></span></span><span class="pct">50%</span></div>
+          <div class="bar-row"><span class="lab">Quizzes + midterm exam</span><span class="bar-track"><span class="bar-fill" style="width:25%"></span></span><span class="pct">25%</span></div>
+          <div class="bar-row"><span class="lab">Group project (with Linear Algebra)</span><span class="bar-track"><span class="bar-fill" style="width:15%"></span></span><span class="pct">15%</span></div>
+          <div class="bar-row"><span class="lab">Class participation</span><span class="bar-track"><span class="bar-fill" style="width:10%"></span></span><span class="pct">10%</span></div>
+        </div>
+        <p class="bar-note"><strong>Midterm</strong> covers Modules 1–2 (checkpoint on foundations).
+          The <strong>group project</strong> is done in collaboration with Linear Algebra, assessing a small Python
+          program that solves a concrete CS/AI or data-analysis problem — graded on correctness, code quality,
+          reproducibility, and the clarity of an in-person presentation. <strong>80% attendance</strong> is required.</p>
+      </section>
+
+      <!-- D. PROGRAM ----------------------------------------------------- -->
+      <section class="demo" id="program">
+        <h2>Program — full session-by-session structure</h2>
+        <p class="cap">All 30 live in-person sessions, grouped by module. Each item lists its session number, title,
+          focus, topics, and key readings/tools, cross-linked to the matching
+          <a href="./index.html">interactive demo</a> where one exists.</p>
+
+        <!-- MODULE 1 -->
+        <div class="module-band"><span class="mtag">Module 1 / 4</span><span class="mname">Fundamentals</span></div>
+        <p class="module-desc">Computing basics, compiled vs. interpreted languages, and pseudocode to plan solutions.
+          Students then learn core Python syntax and logic — variables and types, if/else and boolean logic, loops, and
+          basic debugging — before moving into functions, scope, and an introduction to generators plus functional tools.</p>
+        <div class="timeline">
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S01</span><span class="sess-title">Computing Basics</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">How a computer actually runs a program, and how to plan logic before writing code.</p>
+            <ul class="topics">
+              <li>The hardware/software interface: CPU, memory, and programs</li>
+              <li>How programs run: compiled (e.g. C) vs. interpreted (e.g. Python) languages</li>
+              <li>Pseudocode: expressing logic before writing code</li>
+            </ul>
+            <div class="tags">
+              <a class="tag demo-link" href="./index.html#exec">demo: compiled vs interpreted</a>
+              <span class="tag read">CPU / memory model</span>
+            </div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S02</span><span class="sess-title">Introduction to Python</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">First contact with Python and Colab; variables and basic operations.</p>
+            <ul class="topics">
+              <li>Introduction to Python and Google Colab notebooks</li>
+              <li>Variables: numeric (<code>int</code>, <code>float</code>), booleans, and strings</li>
+              <li>Operations with numeric variables (arithmetic operators)</li>
+              <li>Operations and methods with strings (basic text processing)</li>
+            </ul>
+            <div class="tags"><span class="tag read">Google Colab setup</span><span class="tag read">Python types</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S03</span><span class="sess-title">Flow control</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Branching with conditionals and boolean logic.</p>
+            <ul class="topics">
+              <li>The <code>if</code>/<code>else</code> statement</li>
+              <li>Logical operators: <code>and</code>, <code>or</code>, <code>not</code></li>
+            </ul>
+            <div class="tags"><a class="tag demo-link" href="./index.html#flow">demo: flow control</a><span class="tag read">boolean logic</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S04</span><span class="sess-title">Loops and basic debugging</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Iteration, loop control, and reading errors.</p>
+            <ul class="topics">
+              <li><code>for</code> and <code>while</code> loops; exiting with <code>break</code> and <code>continue</code></li>
+              <li>Combining loops and flow control</li>
+              <li>Basic debugging using <code>print()</code> and reading tracebacks</li>
+            </ul>
+            <div class="tags"><a class="tag demo-link" href="./index.html#flow">demo: loops &amp; break/continue</a><span class="tag read">tracebacks</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S05</span><span class="sess-title">Functions I</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Modularity: defining and calling functions.</p>
+            <ul class="topics">
+              <li>What is a function? Why modularity matters in software</li>
+              <li>Creating user-defined functions with <code>def</code></li>
+              <li>Positional arguments and return values</li>
+              <li>Keyword arguments and default values</li>
+            </ul>
+            <div class="tags"><span class="tag read">functions &amp; parameters</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S06</span><span class="sess-title">Functions II</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Documentation, recursion, and testing functions.</p>
+            <ul class="topics">
+              <li>Docstrings and type hints; why they matter for maintainability</li>
+              <li>Function recursion: how a function can call itself</li>
+              <li>Debugging functions: tracing inputs/outputs, minimal tests</li>
+            </ul>
+            <div class="tags">
+              <a class="tag demo-link" href="./index.html#stack">demo: recursion &amp; call stack</a>
+              <a class="tag demo-link" href="./index.html#memo">demo: recursion tree &amp; memoization</a>
+            </div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S07</span><span class="sess-title">Functions III</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Scope, generators, and functional-programming basics.</p>
+            <ul class="topics">
+              <li>Scope and program reasoning: local/global, variable lifetime, side effects</li>
+              <li>Iterators &amp; generators: <code>yield</code>, lazy evaluation (streaming/large inputs)</li>
+              <li>Functional programming basics: <code>lambda</code>, <code>map</code>, <code>filter</code></li>
+            </ul>
+            <div class="tags">
+              <a class="tag demo-link" href="./index.html#scope">demo: scope &amp; closures (LEGB)</a>
+              <a class="tag demo-link" href="./index.html#hof">demo: map / filter / reduce</a>
+              <a class="tag demo-link" href="./index.html#lazy">demo: lazy evaluation</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODULE 2 -->
+        <div class="module-band"><span class="mtag">Module 2 / 4</span><span class="mname">Data Structures</span></div>
+        <p class="module-desc">Working with Python's core data structures — lists/tuples, sets, and dictionaries —
+          practicing iterating, indexing, and building structures efficiently. Covers mutability and side effects in
+          functions, and concludes with an exercise-based review and a midterm exam over Modules 1–2.</p>
+        <div class="timeline">
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S08</span><span class="sess-title">Core data structures and iterations</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Introducing the four core containers and how to iterate/index them.</p>
+            <ul class="topics">
+              <li>Properties of lists, tuples, sets and dictionaries</li>
+              <li>Iterables: lists and tuples</li>
+              <li>Using indexes to retrieve values from inside an iterable</li>
+              <li>Initializing iterables and changing their contents</li>
+              <li>What is list comprehension?</li>
+            </ul>
+            <div class="tags"><span class="tag read">sequences &amp; indexing</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S09</span><span class="sess-title">Sets and membership</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Sets and the operations they make cheap.</p>
+            <ul class="topics">
+              <li>Sets in Python</li>
+              <li>Difference between lists, tuples and sets; converting between them</li>
+              <li>Operating with sets: deduplication, membership testing, filtering</li>
+            </ul>
+            <div class="tags"><span class="tag read">set operations</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S10</span><span class="sess-title">Dictionaries (hash maps)</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Key/value storage and how dictionaries are built.</p>
+            <ul class="topics">
+              <li>Dictionaries in Python — what are key-value pairs?</li>
+              <li>Accessing, adding and removing elements</li>
+              <li>Creating dictionaries from lists, tuples and sets</li>
+            </ul>
+            <div class="tags"><a class="tag demo-link" href="./index.html#hash">demo: dictionaries as hash maps</a></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S11</span><span class="sess-title">Building structures in loops</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Accumulating data structures iteratively in real contexts.</p>
+            <ul class="topics">
+              <li>How to initialize data structures and update them inside loops</li>
+              <li>Examples and applications with a focus on CS &amp; AI contexts</li>
+            </ul>
+            <div class="tags"><span class="tag read">accumulation patterns</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S12</span><span class="sess-title">Mutability and function effects</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">How functions can change data, and how to write safer APIs.</p>
+            <ul class="topics">
+              <li>How functions may affect data structures: the effects of mutability</li>
+              <li>Writing safer APIs: "modify in-place" vs "return a new object"</li>
+            </ul>
+            <div class="tags"><a class="tag demo-link" href="./index.html#mut">demo: mutability &amp; side effects</a></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S13</span><span class="sess-title">Mid-term review I</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Consolidation through applied exercises.</p>
+            <ul class="topics">
+              <li>Review of all content learnt so far through exercises</li>
+              <li>Examples of computer programming applications to CS &amp; AI</li>
+              <li>Group challenge: be the team to first solve the exercises!</li>
+            </ul>
+            <div class="tags"><span class="tag read">problem sets</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S14</span><span class="sess-title">Mid-term review II</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Exam preparation with a mock.</p>
+            <ul class="topics">
+              <li>Review for the midterm exam — covers Modules 1–2</li>
+              <li>Mock exam based on previous years</li>
+            </ul>
+            <div class="tags"><span class="tag read">mock exam</span></div>
+          </div>
+
+          <div class="sess exam">
+            <div class="sess-head"><span class="sess-num">S15</span><span class="sess-title">Mid-term exam</span><span class="sess-badge flag">assessment</span></div>
+            <p class="sess-obj">Checkpoint on foundational understanding and problem-solving.</p>
+            <ul class="topics">
+              <li>Scope: Modules 1 and 2</li>
+            </ul>
+            <div class="tags"><span class="tag read">part of Quizzes+Midterm · 25%</span></div>
+          </div>
+        </div>
+
+        <!-- MODULE 3 -->
+        <div class="module-band"><span class="mtag">Module 3 / 4</span><span class="mname">The Python Ecosystem</span></div>
+        <p class="module-desc">Practical development workflow: the command line and VS Code, notebooks in VS Code, and
+          running programs locally. Students learn to write and execute scripts, organize code into modules and imports,
+          and manage environments and dependencies (conda/pip), with a short introduction to object-oriented programming.</p>
+        <div class="timeline">
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S16</span><span class="sess-title">Command Line Interface &amp; IDE</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Moving from notebooks to a real local development environment.</p>
+            <ul class="topics">
+              <li>Introduction to the CLI: terminal fundamentals</li>
+              <li>Python IDEs: PyCharm, Spyder, VS Code</li>
+              <li>Downloading and installing VS Code</li>
+              <li>Running code: terminal vs UI; Jupyter notebooks in VS Code</li>
+            </ul>
+            <div class="tags"><span class="tag read">VS Code setup</span><span class="tag read">terminal basics</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S17</span><span class="sess-title">Scripts, modules and imports</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Structuring real programs across files.</p>
+            <ul class="topics">
+              <li>Writing scripts in Python</li>
+              <li>Running scripts: execution order and the <code>main</code> function</li>
+              <li>Code reusability: importing functions from other scripts</li>
+            </ul>
+            <div class="tags"><span class="tag read">modules &amp; imports</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S18</span><span class="sess-title">Environments and dependencies</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Isolating and reproducing project environments.</p>
+            <ul class="topics">
+              <li>Introduction to Python environments</li>
+              <li>Managing environments with Conda</li>
+              <li>Installing libraries with <code>pip</code> and Conda</li>
+            </ul>
+            <div class="tags"><span class="tag read">pip / conda / venv</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S19</span><span class="sess-title">Introduction to Object-Oriented Programming</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Comparing paradigms and the basics of classes.</p>
+            <ul class="topics">
+              <li>Programming paradigms: procedural vs. functional vs. object-oriented</li>
+              <li>Why OOP: abstraction, encapsulation, code organization in larger systems</li>
+              <li>Classes and objects: defining a class, creating objects, attributes and methods</li>
+              <li>Coding a mini OOP example</li>
+            </ul>
+            <div class="tags">
+              <a class="tag demo-link" href="./index.html#hof">demo: functional tools (paradigm contrast)</a>
+              <span class="tag read">classes &amp; objects</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODULE 4 -->
+        <div class="module-band"><span class="mtag">Module 4 / 4</span><span class="mname">Advanced Programming</span></div>
+        <p class="module-desc">Numerical and data-oriented programming with NumPy. Introduces file/data handling, pandas
+          for tabular data, and Matplotlib for visualization and exporting results, leading into the project wrap-up and
+          final review.</p>
+        <div class="timeline">
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S20</span><span class="sess-title">NumPy foundations</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">The array as the core scientific-computing data type.</p>
+            <ul class="topics">
+              <li>Introduction to NumPy</li>
+              <li>Creating and manipulating arrays</li>
+              <li>Array indexing and slicing</li>
+            </ul>
+            <div class="tags"><a class="tag demo-link" href="./index.html#numpy">demo: NumPy vectorization</a></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S21</span><span class="sess-title">Vectorized operations</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Element-wise computation and broadcasting.</p>
+            <ul class="topics">
+              <li>Arithmetic operations on NumPy arrays</li>
+              <li>Broadcasting in NumPy</li>
+              <li>NumPy built-in methods and functions</li>
+            </ul>
+            <div class="tags"><a class="tag demo-link" href="./index.html#numpy">demo: broadcasting</a></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S22</span><span class="sess-title">Shapes and transformations</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Reshaping data to fit different computations.</p>
+            <ul class="topics">
+              <li>Reshaping and resizing arrays</li>
+              <li>Joining and splitting arrays</li>
+              <li>Changing array shapes and dimensions</li>
+            </ul>
+            <div class="tags"><span class="tag read">ndarray shapes</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S23</span><span class="sess-title">Data &amp; file handling for scientific computing</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Reading and writing data to and from disk.</p>
+            <ul class="topics">
+              <li>Paths and folders (relative vs absolute); reading/writing text files</li>
+              <li>CSV + JSON basics — what they are and when to use each</li>
+              <li>Loading/saving data with NumPy</li>
+            </ul>
+            <div class="tags"><span class="tag read">files · CSV · JSON</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S24</span><span class="sess-title">Basic statistics with NumPy</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Summarizing data and preparing it for ML.</p>
+            <ul class="topics">
+              <li>Descriptive statistics: mean, median, standard deviation</li>
+              <li>Correlation and covariance</li>
+              <li>Normalization and scaling as preparation for ML</li>
+            </ul>
+            <div class="tags"><span class="tag read">descriptive stats</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S25</span><span class="sess-title">Performance and vectorization</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Why vectorized code is fast, with a competitive challenge.</p>
+            <ul class="topics">
+              <li>The importance of vectorization: writing efficient NumPy code</li>
+              <li>Group challenge: be the team with the fastest code!</li>
+            </ul>
+            <div class="tags"><a class="tag demo-link" href="./index.html#numpy">demo: vectorization speedup</a></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S26</span><span class="sess-title">Data handling &amp; cleaning with Pandas</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Tabular data with the pandas DataFrame.</p>
+            <ul class="topics">
+              <li>Series vs DataFrame; CSV I/O with pandas</li>
+              <li>Selecting/filtering rows &amp; columns; creating/transforming columns; basic cleaning</li>
+              <li>GroupBy + aggregation</li>
+            </ul>
+            <div class="tags"><span class="tag read">pandas · groupby</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S27</span><span class="sess-title">Data visualization with Matplotlib</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Turning results into figures and exporting outputs.</p>
+            <ul class="topics">
+              <li>Plotting with Matplotlib</li>
+              <li>Choosing the right plot (scatter / line / hist / bar)</li>
+              <li>Saving figures and final datasets</li>
+            </ul>
+            <div class="tags"><span class="tag read">Matplotlib</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S28</span><span class="sess-title">Project presentations</span><span class="sess-badge flag">assessment</span></div>
+            <p class="sess-obj">Group project showcase.</p>
+            <ul class="topics">
+              <li>Presentations of the group projects (CS/AI-oriented objective)</li>
+            </ul>
+            <div class="tags"><span class="tag read">Group project · 15%</span></div>
+          </div>
+
+          <div class="sess">
+            <div class="sess-head"><span class="sess-num">S29</span><span class="sess-title">Course review</span><span class="sess-badge">live</span></div>
+            <p class="sess-obj">Comprehensive preparation for the final exam.</p>
+            <ul class="topics">
+              <li>Review for the final exam — covers Modules 1–4</li>
+              <li>Mock exam based on previous years</li>
+            </ul>
+            <div class="tags"><span class="tag read">final mock</span></div>
+          </div>
+
+          <div class="sess exam">
+            <div class="sess-head"><span class="sess-num">S30</span><span class="sess-title">Final exam</span><span class="sess-badge flag">assessment</span></div>
+            <p class="sess-obj">Comprehensive assessment of the whole course.</p>
+            <ul class="topics">
+              <li>Scope: all Modules 1–4</li>
+              <li>Minimum 3.5/10 required to pass the course overall</li>
+            </ul>
+            <div class="tags"><span class="tag read">Final exam · 50%</span></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>programming-principles-lab — Andrea Montana · IE BCSAI</span>
+      <span class="more">
+        <a href="https://github.com/andreaisabelmontana/discrete-math-lab"   target="_blank">discrete-math-lab</a>
+        <a href="https://github.com/andreaisabelmontana/prob-stats-lab"      target="_blank">prob-stats-lab</a>
+        <a href="https://github.com/andreaisabelmontana/business-lab"        target="_blank">business-lab</a>
+        <a href="https://github.com/andreaisabelmontana/research-methods-lab" target="_blank">research-methods-lab</a>
+        <a href="https://github.com/andreaisabelmontana/big-history-lab"     target="_blank">big-history-lab</a>
+        <a href="https://github.com/andreaisabelmontana/programming-principles-lab" target="_blank">source</a>
+      </span>
+    </footer>
+  </body>
+</html>
