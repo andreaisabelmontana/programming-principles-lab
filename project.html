@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#4338CA" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>programming-principles-lab · worked example — one problem, four paradigms</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="./style.css" />
+
+    <style>
+      /* project.html — reuses the *-lab :root tokens; adds only the
+         primitives this worked-example page needs: code blocks, callouts,
+         a comparison table, a verdict grid, and outcome mapping. */
+      .lead { color: var(--ink-soft); font-size: 0.9rem; margin: 0 0 0.85rem; }
+      .lead + .lead { margin-top: -0.4rem; }
+      .lead strong { color: var(--ink); font-weight: 700; }
+
+      /* meta grid (overview) */
+      .meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.6rem;
+        margin-top: 0.4rem;
+      }
+      .meta .cell {
+        border: 1px solid var(--rule);
+        border-radius: 6px;
+        padding: 0.5rem 0.65rem;
+        background: var(--paper);
+      }
+      .meta .cell .k { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; }
+      .meta .cell .v { color: var(--ink); font-weight: 700; font-size: 0.9rem; margin-top: 0.15rem; }
+      .meta .cell .v.mono { font-family: var(--font-mono); font-weight: 600; }
+
+      /* objective / bullet list */
+      ul.obj { list-style: none; margin: 0.3rem 0 0; padding: 0; display: grid; gap: 0.45rem; }
+      ul.obj li { position: relative; padding-left: 1.3rem; color: var(--ink-soft); font-size: 0.86rem; }
+      ul.obj li::before {
+        content: ''; position: absolute; left: 0; top: 0.45em;
+        width: 8px; height: 8px; border-radius: 2px; background: var(--accent);
+      }
+      ul.obj li strong { color: var(--ink); font-weight: 600; }
+      .subhead { font-weight: 700; color: var(--ink); font-size: 0.82rem; margin: 0.9rem 0 0.3rem; text-transform: uppercase; letter-spacing: 0.04em; }
+
+      /* code blocks — scoped to this page */
+      pre {
+        margin: 0.55rem 0 0.2rem;
+        background: #15151A;
+        color: #E8E8EF;
+        border: 1px solid var(--rule-h);
+        border-radius: 8px;
+        padding: 0.85rem 1rem;
+        overflow-x: auto;
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        line-height: 1.55;
+      }
+      pre code { font-family: inherit; font-size: inherit; background: none; color: inherit; padding: 0; }
+      .code-cap {
+        display: flex; align-items: center; gap: 0.5rem;
+        font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted);
+        margin-top: 0.6rem;
+      }
+      .code-cap .fname { color: var(--ink-soft); font-weight: 600; }
+      .code-cap .pill {
+        font-size: 0.66rem; font-weight: 600; color: var(--accent);
+        background: var(--accent-soft); border-radius: 999px; padding: 0.1em 0.5em;
+      }
+      /* lightweight syntax tint via spans */
+      pre .kw { color: #C4B5FD; }
+      pre .fn { color: #93C5FD; }
+      pre .str { color: #86EFAC; }
+      pre .num { color: #FDBA74; }
+      pre .cm { color: #6B7280; font-style: italic; }
+      pre .bi { color: #F0ABFC; }
+
+      /* inline code in prose */
+      p code, li code, td code, .note code {
+        font-family: var(--font-mono); font-size: 0.9em;
+        background: var(--accent-soft); color: var(--accent);
+        padding: 0 0.25em; border-radius: 3px;
+      }
+
+      /* notes / callouts */
+      .note {
+        margin: 0.5rem 0 0.1rem; padding: 0.5rem 0.7rem;
+        border-left: 2px solid var(--accent); background: var(--accent-soft);
+        border-radius: 0 5px 5px 0; font-size: 0.82rem; color: var(--ink-soft);
+      }
+      .note b { color: var(--ink); font-weight: 600; }
+      .note.warn { border-left-color: var(--warn); background: rgba(245, 158, 11, 0.10); }
+      .note.good { border-left-color: var(--good); background: rgba(22, 163, 74, 0.10); }
+
+      /* spec table / comparison table */
+      table.tbl { width: 100%; border-collapse: collapse; margin-top: 0.5rem; font-size: 0.82rem; }
+      table.tbl th, table.tbl td {
+        text-align: left; padding: 0.5rem 0.6rem;
+        border-bottom: 1px solid var(--rule); vertical-align: top;
+      }
+      table.tbl th {
+        color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em;
+        font-weight: 700; border-bottom: 2px solid var(--rule-h);
+      }
+      table.tbl td { color: var(--ink-soft); }
+      table.tbl td:first-child { color: var(--ink); font-weight: 600; }
+      table.tbl tr:last-child td { border-bottom: 0; }
+      table.tbl td.c { text-align: center; font-family: var(--font-mono); font-weight: 600; }
+      .scroll-x { overflow-x: auto; }
+
+      /* "fits when" verdict grid */
+      .verdict { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 0.6rem; margin-top: 0.4rem; }
+      .verdict .v-card {
+        border: 1px solid var(--rule); border-radius: 8px; padding: 0.65rem 0.75rem; background: var(--paper);
+      }
+      .verdict .v-card h4 { margin: 0 0 0.3rem; font-size: 0.86rem; color: var(--ink); font-weight: 700; }
+      .verdict .v-card h4 .tagp {
+        font-family: var(--font-mono); font-size: 0.66rem; font-weight: 600; color: var(--accent);
+        background: var(--accent-soft); border-radius: 999px; padding: 0.1em 0.5em; margin-left: 0.35em;
+      }
+      .verdict .v-card p { margin: 0; color: var(--ink-soft); font-size: 0.8rem; }
+
+      /* cross-link tags (match course.html) */
+      .tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.55rem; }
+      .tag {
+        font-size: 0.7rem; font-family: var(--font-mono); font-weight: 500;
+        color: var(--ink-soft); background: var(--bg);
+        border: 1px solid var(--rule); border-radius: 999px;
+        padding: 0.12em 0.55em;
+      }
+      a.tag.demo-link { color: var(--accent); border-color: var(--rule-h); }
+      a.tag.demo-link::before { content: '▸ '; }
+      a.tag.demo-link:hover { border-color: var(--accent); background: var(--accent-soft); }
+      a.tag.course-link { color: var(--ink-soft); border-color: var(--rule-h); }
+      a.tag.course-link::before { content: '§ '; }
+      a.tag.course-link:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+      /* outcome mapping list */
+      ul.map { list-style: none; margin: 0.3rem 0 0; padding: 0; display: grid; gap: 0.5rem; }
+      ul.map li { color: var(--ink-soft); font-size: 0.84rem; padding-left: 0.2rem; }
+      ul.map li .oc { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 0.1em 0.5em; margin-right: 0.4em; }
+      ul.map li strong { color: var(--ink); font-weight: 600; }
+
+      /* references */
+      ul.biblio { list-style: none; margin: 0.3rem 0 0; padding: 0; display: grid; gap: 0.7rem; }
+      ul.biblio li { color: var(--ink-soft); font-size: 0.84rem; padding-left: 0.9rem; position: relative; }
+      ul.biblio li::before { content: '📖'; position: absolute; left: -0.15rem; top: 0; font-size: 0.7rem; }
+      ul.biblio li .bt { color: var(--ink); font-weight: 600; }
+      ul.biblio li .bw { color: var(--muted); font-size: 0.76rem; font-family: var(--font-mono); }
+
+      .step-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 0.4rem; margin-top: 0.5rem; }
+      .step-row .stepc { border: 1px solid var(--rule); border-radius: 6px; padding: 0.4rem; text-align: center; background: var(--paper); }
+      .step-row .stepc .tok { font-family: var(--font-mono); font-weight: 700; color: var(--accent); font-size: 0.9rem; }
+      .step-row .stepc .stk { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="title">
+        <span class="dot"></span><strong>Principles of Programming</strong>
+        <span class="sub">worked example · one problem · four paradigms</span>
+      </div>
+      <nav>
+        <a href="./index.html">← interactive demos</a>
+        <a href="./course.html">course outline</a>
+        <a href="#overview">overview</a>
+        <a href="#spec">problem</a>
+        <a href="#imperative">imperative</a>
+        <a href="#oo">object-oriented</a>
+        <a href="#functional">functional</a>
+        <a href="#compare">comparison</a>
+        <a href="#outcomes">outcomes</a>
+        <a href="#extend">extensions</a>
+        <a href="#refs">references</a>
+        <a href="./SYLLABUS.pdf" target="_blank">syllabus PDF</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- 1. OVERVIEW ----------------------------------------------------- -->
+      <section class="demo" id="overview">
+        <h2>Worked example — one problem, four paradigms</h2>
+        <p class="lead">A single, in-depth worked project that takes <strong>one small program</strong> — an
+          arithmetic-expression evaluator — and implements it four ways: <strong>imperative</strong>,
+          <strong>object-oriented</strong>, <strong>functional</strong>, and a short <strong>declarative</strong> coda.
+          The goal is not the program itself (it is deliberately tiny) but seeing how the <em>same</em> logic re-shapes
+          itself under different paradigms, and learning to read each style on its merits: readability, how it handles
+          <em>state</em>, and the design patterns each one invites.</p>
+        <p class="lead">This is the paradigm contrast promised in <strong>Session 19 (Intro to OOP)</strong>, made
+          concrete. It reuses ideas you have already seen interactively in the demos: the <strong>call stack</strong>
+          (recursion), <strong>scope &amp; closures</strong>, <strong>map/filter/reduce</strong>, <strong>mutability
+          &amp; side effects</strong>, and <strong>dictionaries as dispatch tables</strong>. Every snippet below is real,
+          runnable code — copy it into a Colab cell or a <code>.py</code> file and it works.</p>
+
+        <div class="meta">
+          <div class="cell"><div class="k">Goal</div><div class="v">Evaluate arithmetic in 4 paradigms</div></div>
+          <div class="cell"><div class="k">Languages</div><div class="v mono">Python 3.11 · JS (ES2020)</div></div>
+          <div class="cell"><div class="k">Sessions exercised</div><div class="v mono">S03–S12 · S19</div></div>
+          <div class="cell"><div class="k">Module focus</div><div class="v">M1 fundamentals · M3 paradigms</div></div>
+          <div class="cell"><div class="k">Core idea</div><div class="v">state &amp; control flow</div></div>
+          <div class="cell"><div class="k">Lines of code</div><div class="v mono">~25 per paradigm</div></div>
+        </div>
+
+        <div class="subhead">What this project exercises</div>
+        <ul class="obj">
+          <li><strong>Decomposition</strong> — the same problem split into tokenize → parse → evaluate, with clear interfaces (Session 5, outcome on modular components).</li>
+          <li><strong>Control flow &amp; state</strong> — loops and an explicit stack (imperative) vs. encapsulated state (OO) vs. no mutable state at all (functional).</li>
+          <li><strong>Paradigm fluency</strong> — the procedural / functional / object-oriented contrast named explicitly in Session 19.</li>
+          <li><strong>Good practices</strong> — docstrings, type hints, small testable functions, and an explicit comparison of trade-offs.</li>
+        </ul>
+
+        <div class="tags">
+          <a class="tag course-link" href="./course.html#program">course program</a>
+          <a class="tag course-link" href="./course.html#objectives">learning objectives</a>
+          <a class="tag demo-link" href="./index.html#stack">demo: call stack</a>
+          <a class="tag demo-link" href="./index.html#hof">demo: map/filter/reduce</a>
+          <a class="tag demo-link" href="./index.html#mut">demo: mutability</a>
+        </div>
+      </section>
+
+      <!-- 2. THE PROBLEM SPEC --------------------------------------------- -->
+      <section class="demo" id="spec">
+        <h2>1 · The shared problem specification</h2>
+        <p class="cap">Every implementation below solves <em>exactly</em> this. Fixing the spec first is the whole point:
+          it lets us compare paradigms on equal footing instead of comparing different programs.</p>
+        <p class="lead"><strong>Evaluate a postfix (Reverse Polish) arithmetic expression.</strong> The input is a string
+          of numbers and the operators <code>+ - * /</code> separated by spaces, written in
+          <em>postfix</em> order — the operator comes <em>after</em> its two operands. Postfix is chosen because it needs
+          <em>no</em> parentheses and <em>no</em> precedence rules, so the parsing logic stays small enough to hold all
+          four paradigms side by side. The classic algorithm is the <strong>stack machine</strong>: scan left to right,
+          push numbers, and when you hit an operator pop the top two values, apply it, and push the result.</p>
+
+        <div class="scroll-x">
+          <table class="tbl">
+            <thead><tr><th>Aspect</th><th>Specification</th></tr></thead>
+            <tbody>
+              <tr><td>Input</td><td>A string, e.g. <code>"3 4 + 5 *"</code> (meaning <code>(3 + 4) * 5</code>).</td></tr>
+              <tr><td>Tokens</td><td>Space-separated. Each token is an integer/float literal or one of <code>+ - * /</code>.</td></tr>
+              <tr><td>Output</td><td>A single number — the value of the expression (<code>35.0</code> for the example).</td></tr>
+              <tr><td>Algorithm</td><td>Stack machine: push operands; on an operator pop <em>b</em> then <em>a</em>, push <code>a op b</code>.</td></tr>
+              <tr><td>Errors</td><td>An empty stack on pop, or a leftover stack &ne; 1 item, is a malformed expression.</td></tr>
+              <tr><td>Out of scope</td><td>Parentheses, variables, unary minus, operator precedence (postfix removes the need).</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="lead" style="margin-top:0.85rem"><strong>Trace.</strong> Evaluating <code>3 4 + 5 *</code> with a stack
+          (bottom → top shown under each token as it is consumed):</p>
+        <div class="step-row">
+          <div class="stepc"><div class="tok">3</div><div class="stk">[3]</div></div>
+          <div class="stepc"><div class="tok">4</div><div class="stk">[3, 4]</div></div>
+          <div class="stepc"><div class="tok">+</div><div class="stk">[7]</div></div>
+          <div class="stepc"><div class="tok">5</div><div class="stk">[7, 5]</div></div>
+          <div class="stepc"><div class="tok">*</div><div class="stk">[35]</div></div>
+          <div class="stepc"><div class="tok">→</div><div class="stk">35.0</div></div>
+        </div>
+        <div class="note"><b>Why a stack?</b> This is the same last-in-first-out structure the <a href="./index.html#stack">call-stack demo</a> animates for recursion — each operator "returns" a value that the next operation consumes. Recursion (the functional version) and an explicit list-as-stack (the imperative version) are two faces of the same idea.</div>
+      </section>
+
+      <!-- 3. IMPERATIVE --------------------------------------------------- -->
+      <section class="demo" id="imperative">
+        <h2>2 · Imperative implementation</h2>
+        <p class="cap">The procedural baseline (Sessions 3–5). One function, an explicit loop, and a list used as a
+          mutable stack. State is a variable you watch change as the loop runs — exactly the mental model the
+          flow-control and mutability demos build.</p>
+
+        <div class="code-cap"><span class="pill">Python</span><span class="fname">rpn_imperative.py</span></div>
+        <pre><code><span class="kw">def</span> <span class="fn">eval_rpn</span>(expr: <span class="bi">str</span>) -&gt; <span class="bi">float</span>:
+    <span class="str">"""Evaluate a postfix expression with an explicit stack (imperative)."""</span>
+    stack = []                          <span class="cm"># mutable state we update in-place</span>
+    <span class="kw">for</span> token <span class="kw">in</span> expr.split():     <span class="cm"># step through tokens left to right</span>
+        <span class="kw">if</span> token <span class="kw">in</span> (<span class="str">"+"</span>, <span class="str">"-"</span>, <span class="str">"*"</span>, <span class="str">"/"</span>):
+            <span class="kw">if</span> <span class="bi">len</span>(stack) &lt; <span class="num">2</span>:
+                <span class="kw">raise</span> <span class="bi">ValueError</span>(<span class="str">f"not enough operands for {token!r}"</span>)
+            b = stack.pop()             <span class="cm"># top is the RIGHT operand</span>
+            a = stack.pop()
+            <span class="kw">if</span> token == <span class="str">"+"</span>: stack.append(a + b)
+            <span class="kw">elif</span> token == <span class="str">"-"</span>: stack.append(a - b)
+            <span class="kw">elif</span> token == <span class="str">"*"</span>: stack.append(a * b)
+            <span class="kw">else</span>:
+                <span class="kw">if</span> b == <span class="num">0</span>:
+                    <span class="kw">raise</span> <span class="bi">ZeroDivisionError</span>(<span class="str">"division by zero"</span>)
+                stack.append(a / b)
+        <span class="kw">else</span>:
+            stack.append(<span class="bi">float</span>(token))  <span class="cm"># a number literal &rarr; push it</span>
+    <span class="kw">if</span> <span class="bi">len</span>(stack) != <span class="num">1</span>:
+        <span class="kw">raise</span> <span class="bi">ValueError</span>(<span class="str">f"malformed expression, stack = {stack}"</span>)
+    <span class="kw">return</span> stack[<span class="num">0</span>]
+
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:           <span class="cm"># the S17 entry-point guard</span>
+    <span class="bi">print</span>(eval_rpn(<span class="str">"3 4 + 5 *"</span>))     <span class="cm"># &rarr; 35.0</span>
+    <span class="bi">print</span>(eval_rpn(<span class="str">"10 2 / 3 -"</span>))    <span class="cm"># &rarr; 2.0</span></code></pre>
+
+        <div class="subhead">Notes</div>
+        <ul class="obj">
+          <li><strong>State is explicit and mutable.</strong> <code>stack</code> changes on every iteration; correctness depends on the order of <code>pop()</code> calls — popping <code>b</code> <em>before</em> <code>a</code> matters for <code>-</code> and <code>/</code>. This is the side-effect-driven thinking from <a href="./index.html#mut">the mutability demo</a>.</li>
+          <li><strong>Control flow carries the logic.</strong> The <code>if/elif/else</code> chain and the <code>for</code> loop <em>are</em> the program — the same primitives from Sessions 3–4.</li>
+          <li><strong>Pattern it invites:</strong> a long <code>if/elif</code> dispatch. It is readable at four operators but grows linearly with each new one — a smell the OO and functional versions both fix.</li>
+        </ul>
+        <div class="tags">
+          <a class="tag course-link" href="./course.html#program">S03 flow control</a>
+          <a class="tag course-link" href="./course.html#program">S04 loops</a>
+          <a class="tag demo-link" href="./index.html#flow">demo: flow control</a>
+          <a class="tag demo-link" href="./index.html#mut">demo: mutability</a>
+        </div>
+      </section>
+
+      <!-- 4. OBJECT-ORIENTED ---------------------------------------------- -->
+      <section class="demo" id="oo">
+        <h2>3 · Object-oriented implementation</h2>
+        <p class="cap">Session 19's paradigm. The stack stops being a loose variable and becomes <em>encapsulated state</em>
+          inside an object; the operator dispatch moves into a class-level table. Data and the behavior that acts on it
+          are bundled together — the defining move of OOP.</p>
+
+        <div class="code-cap"><span class="pill">Python</span><span class="fname">rpn_oo.py</span></div>
+        <pre><code><span class="kw">import</span> operator
+
+
+<span class="kw">class</span> <span class="fn">RPNCalculator</span>:
+    <span class="str">"""A stack machine that bundles its state with the methods on it."""</span>
+
+    <span class="cm"># class-level dispatch table: operator symbol &rarr; binary function</span>
+    OPS = {
+        <span class="str">"+"</span>: operator.add,
+        <span class="str">"-"</span>: operator.sub,
+        <span class="str">"*"</span>: operator.mul,
+        <span class="str">"/"</span>: operator.truediv,
+    }
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self) -&gt; <span class="bi">None</span>:
+        self._stack: <span class="bi">list</span>[<span class="bi">float</span>] = []   <span class="cm"># encapsulated, owned by the object</span>
+
+    <span class="kw">def</span> <span class="fn">push</span>(self, value: <span class="bi">float</span>) -&gt; <span class="bi">None</span>:
+        self._stack.append(value)
+
+    <span class="kw">def</span> <span class="fn">apply</span>(self, symbol: <span class="bi">str</span>) -&gt; <span class="bi">None</span>:
+        <span class="kw">if</span> <span class="bi">len</span>(self._stack) &lt; <span class="num">2</span>:
+            <span class="kw">raise</span> <span class="bi">ValueError</span>(<span class="str">f"not enough operands for {symbol!r}"</span>)
+        b = self._stack.pop()
+        a = self._stack.pop()
+        self._stack.append(self.OPS[symbol](a, b))   <span class="cm"># table lookup, no if-chain</span>
+
+    <span class="kw">def</span> <span class="fn">evaluate</span>(self, expr: <span class="bi">str</span>) -&gt; <span class="bi">float</span>:
+        self._stack.clear()
+        <span class="kw">for</span> token <span class="kw">in</span> expr.split():
+            <span class="kw">if</span> token <span class="kw">in</span> self.OPS:
+                self.apply(token)
+            <span class="kw">else</span>:
+                self.push(<span class="bi">float</span>(token))
+        <span class="kw">if</span> <span class="bi">len</span>(self._stack) != <span class="num">1</span>:
+            <span class="kw">raise</span> <span class="bi">ValueError</span>(<span class="str">f"malformed expression, stack = {self._stack}"</span>)
+        <span class="kw">return</span> self._stack[<span class="num">0</span>]
+
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    calc = RPNCalculator()
+    <span class="bi">print</span>(calc.evaluate(<span class="str">"3 4 + 5 *"</span>))    <span class="cm"># &rarr; 35.0</span>
+    <span class="bi">print</span>(calc.evaluate(<span class="str">"2 3 4 * +"</span>))    <span class="cm"># &rarr; 14.0 (reusing one object)</span></code></pre>
+
+        <div class="subhead">Notes</div>
+        <ul class="obj">
+          <li><strong>State is encapsulated.</strong> <code>self._stack</code> belongs to the object; the leading underscore signals "internal." Callers interact only through <code>push</code> / <code>apply</code> / <code>evaluate</code> — the abstraction and encapsulation goals named in Session 19.</li>
+          <li><strong>Dispatch becomes a dictionary.</strong> The <code>OPS</code> table replaces the <code>if/elif</code> chain — adding an operator is one line, not a new branch. This is a <em>dictionary as hash map</em> (Session 10) used as a strategy table.</li>
+          <li><strong>Pattern it invites:</strong> a reusable, configurable object you could subclass (e.g. a calculator that logs every operation) — at the cost of more ceremony than the problem strictly needs.</li>
+        </ul>
+        <div class="tags">
+          <a class="tag course-link" href="./course.html#program">S19 OOP &amp; paradigms</a>
+          <a class="tag course-link" href="./course.html#program">S10 dictionaries</a>
+          <a class="tag demo-link" href="./index.html#hash">demo: dictionaries as hash maps</a>
+        </div>
+      </section>
+
+      <!-- 5. FUNCTIONAL --------------------------------------------------- -->
+      <section class="demo" id="functional">
+        <h2>4 · Functional implementation</h2>
+        <p class="cap">Session 7's tools taken to their conclusion: no mutable stack at all. The whole evaluation is a
+          single <code>reduce</code> (a fold) over the tokens, where the "stack" is an immutable tuple threaded through
+          and a dictionary of <code>lambda</code>s does the dispatch. Same algorithm, zero side effects.</p>
+
+        <div class="code-cap"><span class="pill">Python</span><span class="fname">rpn_functional.py</span></div>
+        <pre><code><span class="kw">from</span> functools <span class="kw">import</span> reduce
+
+OPS = {                                  <span class="cm"># symbol &rarr; pure binary function</span>
+    <span class="str">"+"</span>: <span class="kw">lambda</span> a, b: a + b,
+    <span class="str">"-"</span>: <span class="kw">lambda</span> a, b: a - b,
+    <span class="str">"*"</span>: <span class="kw">lambda</span> a, b: a * b,
+    <span class="str">"/"</span>: <span class="kw">lambda</span> a, b: a / b,
+}
+
+
+<span class="kw">def</span> <span class="fn">step</span>(stack: <span class="bi">tuple</span>, token: <span class="bi">str</span>) -&gt; <span class="bi">tuple</span>:
+    <span class="str">"""Pure fold step: (stack, token) -&gt; new stack. No mutation."""</span>
+    <span class="kw">if</span> token <span class="kw">in</span> OPS:
+        *rest, a, b = stack              <span class="cm"># unpack top two without popping</span>
+        <span class="kw">return</span> (*rest, OPS[token](a, b))  <span class="cm"># build a NEW tuple</span>
+    <span class="kw">return</span> (*stack, <span class="bi">float</span>(token))       <span class="cm"># push &rarr; new tuple</span>
+
+
+<span class="kw">def</span> <span class="fn">eval_rpn</span>(expr: <span class="bi">str</span>) -&gt; <span class="bi">float</span>:
+    <span class="str">"""Evaluate by folding `step` over the tokens (functional)."""</span>
+    result = reduce(step, expr.split(), ())   <span class="cm"># initial stack = ()</span>
+    <span class="kw">if</span> <span class="bi">len</span>(result) != <span class="num">1</span>:
+        <span class="kw">raise</span> <span class="bi">ValueError</span>(<span class="str">f"malformed expression, stack = {result}"</span>)
+    <span class="kw">return</span> result[<span class="num">0</span>]
+
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    <span class="bi">print</span>(eval_rpn(<span class="str">"3 4 + 5 *"</span>))         <span class="cm"># &rarr; 35.0</span></code></pre>
+
+        <p class="lead" style="margin-top:0.85rem">The same idea is just as natural in JavaScript, where
+          <code>Array.reduce</code> is the everyday fold and arrow functions stand in for <code>lambda</code>:</p>
+        <div class="code-cap"><span class="pill">JavaScript</span><span class="fname">rpnFunctional.js</span></div>
+        <pre><code><span class="kw">const</span> OPS = {
+  <span class="str">"+"</span>: (a, b) =&gt; a + b,
+  <span class="str">"-"</span>: (a, b) =&gt; a - b,
+  <span class="str">"*"</span>: (a, b) =&gt; a * b,
+  <span class="str">"/"</span>: (a, b) =&gt; a / b,
+};
+
+<span class="kw">const</span> <span class="fn">evalRpn</span> = (expr) =&gt;
+  expr
+    .trim()
+    .split(<span class="str">/\s+/</span>)
+    .reduce((stack, tok) =&gt; {
+      <span class="kw">if</span> (tok <span class="kw">in</span> OPS) {
+        <span class="kw">const</span> b = stack[stack.length - <span class="num">1</span>];
+        <span class="kw">const</span> a = stack[stack.length - <span class="num">2</span>];
+        <span class="cm">// return a NEW array &mdash; no mutation of `stack`</span>
+        <span class="kw">return</span> [...stack.slice(<span class="num">0</span>, -<span class="num">2</span>), OPS[tok](a, b)];
+      }
+      <span class="kw">return</span> [...stack, <span class="fn">Number</span>(tok)];
+    }, [])[<span class="num">0</span>];
+
+console.log(<span class="fn">evalRpn</span>(<span class="str">"3 4 + 5 *"</span>)); <span class="cm">// &rarr; 35</span></code></pre>
+
+        <div class="subhead">Notes</div>
+        <ul class="obj">
+          <li><strong>No mutable state.</strong> Each <code>step</code> takes a stack and <em>returns a new one</em>; nothing is ever changed in place. This is the "return-a-new-object" discipline contrasted with mutation in Session 12 — pushed to the limit.</li>
+          <li><strong>The loop disappears.</strong> <code>reduce(step, tokens, ())</code> folds the whole expression into one value — the exact <code>reduce</code> from the <a href="./index.html#hof">map/filter/reduce demo</a>, and the pipeline mindset of Session 7.</li>
+          <li><strong>Pattern it invites:</strong> small pure functions that compose and are trivial to unit-test in isolation (<code>step</code> has no hidden dependencies). The cost is that immutable rebuilding is less obvious to a beginner, and slower for huge inputs.</li>
+        </ul>
+        <div class="tags">
+          <a class="tag course-link" href="./course.html#program">S07 functional tools</a>
+          <a class="tag course-link" href="./course.html#program">S12 mutability</a>
+          <a class="tag demo-link" href="./index.html#hof">demo: map/filter/reduce</a>
+          <a class="tag demo-link" href="./index.html#lazy">demo: lazy evaluation</a>
+        </div>
+      </section>
+
+      <!-- 6. COMPARISON --------------------------------------------------- -->
+      <section class="demo" id="compare">
+        <h2>5 · Comparison — and which paradigm fits when</h2>
+        <p class="cap">The same algorithm, three shapes. The differences are not about correctness (all three return
+          <code>35.0</code>) but about how each handles state, how it reads, and what it makes easy to extend.</p>
+
+        <div class="scroll-x">
+          <table class="tbl">
+            <thead>
+              <tr><th>Dimension</th><th>Imperative</th><th>Object-oriented</th><th>Functional</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>State</td><td>Explicit mutable list; you watch it change</td><td>Encapsulated in <code>self._stack</code>, owned by the object</td><td>None — immutable tuple threaded through the fold</td></tr>
+              <tr><td>Dispatch</td><td><code>if/elif</code> chain (grows per operator)</td><td><code>OPS</code> dict on the class (one line per operator)</td><td><code>OPS</code> dict of <code>lambda</code>s</td></tr>
+              <tr><td>Control flow</td><td>Visible <code>for</code> loop</td><td><code>for</code> loop inside a method</td><td>Hidden inside <code>reduce</code></td></tr>
+              <tr><td>Lines of code</td><td class="c">~22</td><td class="c">~30</td><td class="c">~16</td></tr>
+              <tr><td>Readability (beginner)</td><td class="c">high</td><td class="c">medium</td><td class="c">medium-low</td></tr>
+              <tr><td>Testability</td><td>Test the one function</td><td>Test the object; can mock pieces</td><td>Test <code>step</code> in isolation (pure)</td></tr>
+              <tr><td>Extensibility</td><td>Edit the if-chain</td><td>Subclass / extend <code>OPS</code></td><td>Add to <code>OPS</code>; compose functions</td></tr>
+              <tr><td>Reuse across calls</td><td>Call the function again</td><td>One object, many evaluations + history</td><td>Pure, trivially reusable</td></tr>
+              <tr><td>Main risk</td><td>Side-effect bugs (pop order)</td><td>Over-engineering a tiny problem</td><td>Allocation cost; opaque to newcomers</td></tr>
+              <tr><td>Invites pattern</td><td>Linear dispatch</td><td>Strategy table + encapsulation</td><td>Fold / pipeline of pure functions</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="subhead">Which paradigm fits when</div>
+        <div class="verdict">
+          <div class="v-card">
+            <h4>Imperative <span class="tagp">procedural</span></h4>
+            <p>Short scripts, one-off automation, hot loops where you control performance directly. The clearest choice for a beginner and for code that is read more than extended. The course's default through Modules 1–2.</p>
+          </div>
+          <div class="v-card">
+            <h4>Object-oriented <span class="tagp">OOP</span></h4>
+            <p>When state and behavior travel together and the thing has a lifetime — a calculator that remembers history, a game entity, a parser with configuration. Pays off as a system <em>grows</em>; overkill for a 20-line script (Session 19).</p>
+          </div>
+          <div class="v-card">
+            <h4>Functional <span class="tagp">FP</span></h4>
+            <p>Data pipelines, transformations, anything you want pure and parallelizable. Shines when you can express a problem as "fold/map/filter over a sequence" — the NumPy and pandas mindset of Module 4.</p>
+          </div>
+          <div class="v-card">
+            <h4>Declarative <span class="tagp">+ extension</span></h4>
+            <p>When you would rather state the <em>rules</em> than the steps — grammars, queries, constraints. See the extension below for a grammar-style take on the same evaluator.</p>
+          </div>
+        </div>
+        <div class="note good"><b>The honest takeaway:</b> for this tiny problem the <em>imperative</em> version is the right default — it is the shortest path to correct, readable code. The OO and functional versions earn their keep only as requirements grow (history, configurability, composition, parallelism). Knowing <em>when</em> the extra structure pays for itself is the real skill.</div>
+      </section>
+
+      <!-- 7. OUTCOME MAPPING ---------------------------------------------- -->
+      <section class="demo" id="outcomes">
+        <h2>6 · Mapping to learning outcomes</h2>
+        <p class="cap">How this single worked example touches the course's stated objectives and sessions. Each line links
+          back to where the idea is introduced.</p>
+        <ul class="map">
+          <li><span class="oc">O2</span><strong>Core programming concepts</strong> — variables, expressions, control flow and functions all appear in the imperative version (Sessions 2–5).</li>
+          <li><span class="oc">O4</span><strong>Decompose into modular components</strong> — tokenize → dispatch → evaluate is a clean interface reused across all three styles (Session 5).</li>
+          <li><span class="oc">O5</span><strong>Good programming practices</strong> — docstrings, type hints, the <code>__main__</code> guard, and an explicit complexity/trade-off discussion (Sessions 6, 17).</li>
+          <li><span class="oc">O3</span><strong>Fundamental data structures</strong> — a list/tuple used as a stack, and a dictionary used as a dispatch table (Sessions 8, 10).</li>
+          <li><span class="oc">S07</span><strong>Functional tools</strong> — <code>lambda</code> and <code>reduce</code> drive the functional version (Session 7).</li>
+          <li><span class="oc">S12</span><strong>Mutability &amp; side effects</strong> — the contrast between the mutating imperative stack and the immutable functional fold is the whole lesson of Session 12, made concrete.</li>
+          <li><span class="oc">S19</span><strong>Contrast paradigms</strong> — procedural vs. functional vs. object-oriented, exactly as Session 19 asks, with a working class.</li>
+          <li><span class="oc">TS</span><strong>Abstraction &amp; communication</strong> — choosing a representation (the stack) and explaining a design decision (which paradigm, and why) are the transversal skills.</li>
+        </ul>
+        <div class="tags">
+          <a class="tag course-link" href="./course.html#objectives">all objectives</a>
+          <a class="tag course-link" href="./course.html#program">session program</a>
+        </div>
+      </section>
+
+      <!-- 8. EXTENSIONS --------------------------------------------------- -->
+      <section class="demo" id="extend">
+        <h2>7 · Extension — a declarative / logic take</h2>
+        <p class="cap">A fourth angle, beyond the syllabus core: instead of describing <em>how</em> to evaluate step by
+          step, describe the <em>grammar</em> of valid expressions and let a recursive-descent reading follow the rules.
+          This is the declarative spirit — state the structure, not the procedure.</p>
+
+        <div class="code-cap"><span class="pill">Python</span><span class="fname">rpn_declarative.py</span></div>
+        <pre><code><span class="cm"># Grammar (declarative spec of WHAT a valid expression IS):</span>
+<span class="cm">#   expr  := number | expr expr op</span>
+<span class="cm">#   op    := "+" | "-" | "*" | "/"</span>
+<span class="cm">#</span>
+<span class="cm"># We consume tokens from the RIGHT and let recursion mirror the rule,</span>
+<span class="cm"># so the call stack itself plays the role of the explicit stack above.</span>
+
+OPS = {<span class="str">"+"</span>: <span class="kw">lambda</span> a, b: a + b, <span class="str">"-"</span>: <span class="kw">lambda</span> a, b: a - b,
+       <span class="str">"*"</span>: <span class="kw">lambda</span> a, b: a * b, <span class="str">"/"</span>: <span class="kw">lambda</span> a, b: a / b}
+
+
+<span class="kw">def</span> <span class="fn">parse</span>(tokens: <span class="bi">list</span>) -&gt; <span class="bi">float</span>:
+    <span class="str">"""Recursively read one sub-expression from the end of `tokens`."""</span>
+    tok = tokens.pop()                   <span class="cm"># take the rightmost token</span>
+    <span class="kw">if</span> tok <span class="kw">in</span> OPS:
+        b = parse(tokens)                <span class="cm"># right operand parses first</span>
+        a = parse(tokens)                <span class="cm"># then the left</span>
+        <span class="kw">return</span> OPS[tok](a, b)
+    <span class="kw">return</span> <span class="bi">float</span>(tok)                    <span class="cm"># base case: a literal</span>
+
+
+<span class="kw">def</span> <span class="fn">eval_rpn</span>(expr: <span class="bi">str</span>) -&gt; <span class="bi">float</span>:
+    tokens = expr.split()
+    value = parse(tokens)
+    <span class="kw">if</span> tokens:                           <span class="cm"># nothing should be left over</span>
+        <span class="kw">raise</span> <span class="bi">ValueError</span>(<span class="str">f"trailing tokens: {tokens}"</span>)
+    <span class="kw">return</span> value
+
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    <span class="bi">print</span>(eval_rpn(<span class="str">"3 4 + 5 *"</span>))         <span class="cm"># &rarr; 35.0</span></code></pre>
+
+        <div class="note"><b>Notice:</b> there is <em>no explicit stack</em> here — the recursion's <a href="./index.html#stack">call stack</a> <em>is</em> the stack. This closes the loop back to Session 6 (recursion) and the call-stack demo: the imperative loop with a list and the recursive parser are the same computation, one with an explicit data structure and one with the runtime's own frames.</div>
+
+        <div class="subhead">Further exercises</div>
+        <ul class="obj">
+          <li>Add an <code>"%"</code> (modulo) and <code>"**"</code> (power) operator — count how many lines each paradigm needs (the dispatch-table versions win).</li>
+          <li>Make the functional version a <strong>generator</strong> that <code>yield</code>s the stack after each token, then feed it the <a href="./index.html#lazy">lazy-evaluation demo</a>'s idea of pulling values on demand.</li>
+          <li>Give the OO version a <code>history</code> list and a <code>.replay()</code> method — the kind of stateful feature that justifies the class in the first place.</li>
+          <li>Convert infix to postfix with the shunting-yard algorithm to handle parentheses and precedence (the part deliberately left out of the spec).</li>
+        </ul>
+      </section>
+
+      <!-- 9. REFERENCES --------------------------------------------------- -->
+      <section class="demo" id="refs">
+        <h2>8 · References</h2>
+        <p class="cap">Standard documentation and companions for the ideas used above; cross-referenced to the sessions
+          where each is introduced.</p>
+        <ul class="biblio">
+          <li><span class="bt">The Python Tutorial &amp; Language Reference (docs.python.org)</span> — classes, <code>functools.reduce</code>, the <code>operator</code> module, and the data model used throughout. <span class="bw">Sessions 5–19</span></li>
+          <li><span class="bt">Python <code>functools</code> &amp; <code>operator</code> docs</span> — <code>reduce</code> and ready-made binary operators behind the functional and OO dispatch tables. <span class="bw">Session 7</span></li>
+          <li><span class="bt">"Think Python" (Downey)</span> — functions, recursion and scope; the base-case reasoning behind the declarative parser. <span class="bw">Sessions 5–7</span></li>
+          <li><span class="bt">Reverse Polish notation &amp; the stack machine</span> — the classic O(n) one-pass evaluation algorithm shared by all four versions. <span class="bw">Sessions 6, 8</span></li>
+          <li><span class="bt">MDN — <code>Array.prototype.reduce</code> &amp; arrow functions</span> — the JavaScript fold used in the functional implementation. <span class="bw">Session 7 (paradigm contrast)</span></li>
+          <li><span class="bt">This repo's interactive demos</span> — call stack, map/filter/reduce, mutability and dictionaries-as-hash-maps animate the mechanics referenced on this page. <span class="bw">cross-linked per section</span></li>
+        </ul>
+        <div class="tags">
+          <a class="tag course-link" href="./course.html#biblio">course bibliography</a>
+          <a class="tag demo-link" href="./index.html">all demos</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>programming-principles-lab — Andrea Montana · IE BCSAI</span>
+      <span class="more">
+        <a href="https://github.com/andreaisabelmontana/discrete-math-lab"   target="_blank">discrete-math-lab</a>
+        <a href="https://github.com/andreaisabelmontana/prob-stats-lab"      target="_blank">prob-stats-lab</a>
+        <a href="https://github.com/andreaisabelmontana/business-lab"        target="_blank">business-lab</a>
+        <a href="https://github.com/andreaisabelmontana/research-methods-lab" target="_blank">research-methods-lab</a>
+        <a href="https://github.com/andreaisabelmontana/big-history-lab"     target="_blank">big-history-lab</a>
+        <a href="https://github.com/andreaisabelmontana/programming-principles-lab" target="_blank">source</a>
+      </span>
+    </footer>
+  </body>
+</html>
