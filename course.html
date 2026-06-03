@@ -111,6 +111,30 @@
 
       .prof-note { color: var(--muted); font-size: 0.8rem; margin-top: 0.6rem; }
       .prof-note strong { color: var(--ink-soft); font-weight: 600; }
+
+      /* per-session "key idea" callout */
+      .keyidea {
+        margin: 0.4rem 0 0.1rem; padding: 0.4rem 0.6rem;
+        border-left: 2px solid var(--accent); background: var(--accent-soft);
+        border-radius: 0 5px 5px 0; font-size: 0.8rem; color: var(--ink-soft);
+      }
+      .keyidea b { color: var(--ink); font-weight: 600; }
+      .keyidea code { font-family: var(--font-mono); font-size: 0.92em; color: var(--accent); }
+
+      /* glossary grid */
+      .gloss { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.6rem; margin-top: 0.4rem; }
+      .gloss .term {
+        border: 1px solid var(--rule); border-radius: 6px; padding: 0.5rem 0.65rem; background: var(--paper);
+      }
+      .gloss .term dt { font-weight: 700; color: var(--ink); font-size: 0.82rem; font-family: var(--font-mono); }
+      .gloss .term dd { margin: 0.2rem 0 0; color: var(--ink-soft); font-size: 0.8rem; }
+
+      /* annotated bibliography */
+      ul.biblio { list-style: none; margin: 0.3rem 0 0; padding: 0; display: grid; gap: 0.7rem; }
+      ul.biblio li { color: var(--ink-soft); font-size: 0.84rem; padding-left: 0.9rem; position: relative; }
+      ul.biblio li::before { content: '📖'; position: absolute; left: -0.15rem; top: 0; font-size: 0.7rem; }
+      ul.biblio li .bt { color: var(--ink); font-weight: 600; }
+      ul.biblio li .bw { color: var(--muted); font-size: 0.76rem; font-family: var(--font-mono); }
     </style>
   </head>
   <body>
@@ -126,6 +150,8 @@
         <a href="#method">methodology</a>
         <a href="#assess">assessment</a>
         <a href="#program">program</a>
+        <a href="#glossary">glossary</a>
+        <a href="#biblio">bibliography</a>
         <a href="./SYLLABUS.pdf" target="_blank">syllabus PDF</a>
       </nav>
     </header>
@@ -143,6 +169,15 @@
           developer workflow (CLI, VS Code, environments, OOP), and finishes with array programming, data handling and a
           final exam. Every concept below is reinforced by the
           <a href="./index.html">interactive demos</a> in this repo.</p>
+        <p class="lead"><strong>Why it matters.</strong> Programming is described in the syllabus as "the art and science of
+          designing and writing software that instructs computers to perform tasks" — the foundational skill that underpins
+          everything from reliable software systems to data-driven and intelligent applications. This course assumes
+          <em>little or no prior experience</em> and is the gateway to later BCSAI coursework in algorithms and data
+          structures, data-centric programming, and introductory machine learning. The emphasis throughout is on
+          <em>transfer</em>: habits and patterns learned here are meant to be reused across the rest of the degree.</p>
+        <p class="lead"><strong>What you will be able to do.</strong> By the end you should be able to build small-to-medium
+          Python programs that automate tasks, process and analyze data, and implement basic algorithmic solutions —
+          writing code that is correct, clear, and easy to maintain, and iterating on it through testing and refinement.</p>
 
         <div class="meta">
           <div class="cell"><div class="k">Program</div><div class="v">Bachelor in CS &amp; AI (BCSAI)</div></div>
@@ -204,6 +239,24 @@
           <div class="bar-row"><span class="lab">Individual studying · 30 h</span><span class="bar-track"><span class="bar-fill" style="width:20%"></span></span><span class="pct">20%</span></div>
         </div>
         <p class="bar-note">Estimated time a student should dedicate to prepare for and participate in each activity.</p>
+
+        <div class="subhead">Three recurring activities</div>
+        <ul class="obj">
+          <li><strong>In-class exercises</strong> — frequent short tasks during class to build fluency and confidence with
+            core programming patterns; worked individually and in small groups so you practice reasoning about code,
+            debugging, and communicating solutions.</li>
+          <li><strong>Problem sets</strong> — deeper, more integrative assignments posted on the campus platform, one per
+            module. Work steadily through the term rather than close to exams. Collaboration is encouraged for understanding
+            and discussing approaches, but submissions should reflect <em>individual</em> work. Selected problems are
+            discussed in class and you may volunteer to present a solution (counts toward participation).</li>
+          <li><strong>Brief announced quizzes</strong> — short quizzes spread through the semester on previously taught
+            material; they help consolidate knowledge and let the instructor monitor progress and adjust pacing.</li>
+        </ul>
+        <p class="prof-note"><strong>Flipped classroom:</strong> when appropriate, review short readings, videos or notebooks
+          <em>before</em> class so in-person time focuses on discussion, live coding, and problem solving.
+          <strong>GenAI policy:</strong> generative-AI tools may be used for specific tasks <em>with acknowledgment</em>;
+          inappropriate or unacknowledged use is academic misconduct and may mean failing the assignment or the course. A
+          suggested acknowledgment format (AI system, prompts used, how the output was used) is provided in the syllabus.</p>
       </section>
 
       <section class="demo" id="assess">
@@ -220,6 +273,27 @@
           The <strong>group project</strong> is done in collaboration with Linear Algebra, assessing a small Python
           program that solves a concrete CS/AI or data-analysis problem — graded on correctness, code quality,
           reproducibility, and the clarity of an in-person presentation. <strong>80% attendance</strong> is required.</p>
+
+        <div class="subhead">Component detail</div>
+        <ul class="obj">
+          <li><strong>Final exam · 50%</strong> — comprehensive, covering all Modules 1–4. <em>Deliverable:</em> a sit-down
+            exam (characteristics announced at the start of the semester). <em>Pass rule:</em> you must score at least
+            <strong>3.5/10</strong> on the final exam to pass the course overall, even if every other component is passed.</li>
+          <li><strong>Quizzes + Midterm · 25%</strong> — several small announced quizzes through the term plus the midterm
+            exam (Modules 1–2), which serves as a checkpoint on foundational understanding and problem-solving skill.</li>
+          <li><strong>Group project · 15%</strong> — done jointly with <em>Linear Algebra</em>, applying programming to that
+            area. Must be completed and submitted <em>before</em> the final exam and includes an in-person presentation.
+            <em>Evaluation:</em> correctness, code quality, appropriate use of course tools, reproducibility, and
+            presentation clarity — assessing both group collaboration and individual contribution.</li>
+          <li><strong>Class participation · 10%</strong> — active engagement in lectures (questions, remarks, volunteering
+            problem-set solutions). Graded on punctuality, participation, and conduct; disruptions or excessive talking may
+            incur a penalty.</li>
+        </ul>
+        <p class="prof-note"><strong>Attendance &amp; re-sit:</strong> <strong>80% attendance</strong> is required — falling
+          below it means failing <em>both</em> the ordinary and extraordinary (June/July) calls and re-enrolling next year.
+          A student has four chances across two academic years. The June/July re-sit is a single comprehensive exam (continuous
+          evaluation is <em>not</em> carried over), capped at <strong>8.0/10</strong> ("notable"); the 3rd-call retake exam is
+          capped at 10.0. Grade appeals require attending the exam review session first.</p>
       </section>
 
       <!-- D. PROGRAM ----------------------------------------------------- -->
@@ -234,16 +308,25 @@
         <p class="module-desc">Computing basics, compiled vs. interpreted languages, and pseudocode to plan solutions.
           Students then learn core Python syntax and logic — variables and types, if/else and boolean logic, loops, and
           basic debugging — before moving into functions, scope, and an introduction to generators plus functional tools.</p>
+        <div class="subhead">Learning outcomes — Module 1</div>
+        <ul class="obj">
+          <li>Explain how a program runs on the CPU/memory and contrast <strong>compiled vs. interpreted</strong> execution.</li>
+          <li>Plan logic in <strong>pseudocode</strong> and translate it into correct Python with variables, types and operators.</li>
+          <li>Control program flow with <strong>conditionals and loops</strong>, and read tracebacks to debug systematically.</li>
+          <li>Decompose problems into <strong>functions</strong> — parameters, return values, docstrings, recursion — and reason
+            about <strong>scope</strong>, generators and basic functional tools.</li>
+        </ul>
         <div class="timeline">
 
           <div class="sess">
             <div class="sess-head"><span class="sess-num">S01</span><span class="sess-title">Computing Basics</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">How a computer actually runs a program, and how to plan logic before writing code.</p>
             <ul class="topics">
-              <li>The hardware/software interface: CPU, memory, and programs</li>
-              <li>How programs run: compiled (e.g. C) vs. interpreted (e.g. Python) languages</li>
-              <li>Pseudocode: expressing logic before writing code</li>
+              <li>The hardware/software interface — the <strong>CPU</strong> executes instructions while <strong>memory (RAM)</strong> holds data and code; a "program" is just an ordered set of instructions the machine carries out.</li>
+              <li>How programs run: a <strong>compiler</strong> (e.g. C) translates the whole program to machine code ahead of time, while an <strong>interpreter</strong> (e.g. Python) executes it line by line — trading raw speed for flexibility and faster iteration.</li>
+              <li>Pseudocode — expressing the steps of a solution in plain structured language <em>before</em> writing real code, so logic can be reasoned about independently of syntax.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> code is a precise plan a machine follows literally. Plan in pseudocode first, then translate to Python — <code>read n → if n &gt; 0 print "positive"</code>.</p>
             <div class="tags">
               <a class="tag demo-link" href="./index.html#exec">demo: compiled vs interpreted</a>
               <span class="tag read">CPU / memory model</span>
@@ -254,11 +337,12 @@
             <div class="sess-head"><span class="sess-num">S02</span><span class="sess-title">Introduction to Python</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">First contact with Python and Colab; variables and basic operations.</p>
             <ul class="topics">
-              <li>Introduction to Python and Google Colab notebooks</li>
-              <li>Variables: numeric (<code>int</code>, <code>float</code>), booleans, and strings</li>
-              <li>Operations with numeric variables (arithmetic operators)</li>
-              <li>Operations and methods with strings (basic text processing)</li>
+              <li>Python and <strong>Google Colab</strong> — a browser-based notebook (no install) where code runs in cells and results appear inline; the course's everyday scratchpad.</li>
+              <li>Variables bind a <em>name</em> to a <em>value</em> of a <strong>type</strong>: <code>int</code>/<code>float</code> for numbers, <code>bool</code> for true/false, <code>str</code> for text.</li>
+              <li>Arithmetic operators <code>+ - * /</code> plus integer division <code>//</code>, modulo <code>%</code> and power <code>**</code>.</li>
+              <li>String methods (<code>.upper()</code>, <code>.split()</code>, slicing, f-strings) for basic text processing.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> a variable is a label for a value; the value's <b>type</b> decides which operations are valid (<code>"3" + "4"</code> concatenates, <code>3 + 4</code> adds).</p>
             <div class="tags"><span class="tag read">Google Colab setup</span><span class="tag read">Python types</span></div>
           </div>
 
@@ -266,9 +350,10 @@
             <div class="sess-head"><span class="sess-num">S03</span><span class="sess-title">Flow control</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Branching with conditionals and boolean logic.</p>
             <ul class="topics">
-              <li>The <code>if</code>/<code>else</code> statement</li>
-              <li>Logical operators: <code>and</code>, <code>or</code>, <code>not</code></li>
+              <li><code>if</code> / <code>elif</code> / <code>else</code> — run different blocks depending on whether a boolean condition is <code>True</code>; indentation defines what belongs to each branch.</li>
+              <li>Logical operators <code>and</code>, <code>or</code>, <code>not</code> combine conditions; Python evaluates them with <em>short-circuit</em> behavior (stops as soon as the result is known).</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> a conditional chooses a path based on a boolean test — <code>if score &gt;= 5 and attended: passed = True</code>.</p>
             <div class="tags"><a class="tag demo-link" href="./index.html#flow">demo: flow control</a><span class="tag read">boolean logic</span></div>
           </div>
 
@@ -276,10 +361,11 @@
             <div class="sess-head"><span class="sess-num">S04</span><span class="sess-title">Loops and basic debugging</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Iteration, loop control, and reading errors.</p>
             <ul class="topics">
-              <li><code>for</code> and <code>while</code> loops; exiting with <code>break</code> and <code>continue</code></li>
-              <li>Combining loops and flow control</li>
-              <li>Basic debugging using <code>print()</code> and reading tracebacks</li>
+              <li><code>for</code> loops iterate over a known collection; <code>while</code> loops repeat until a condition becomes false. <code>break</code> exits early, <code>continue</code> skips to the next iteration.</li>
+              <li>Combining loops with conditionals to express algorithms (filtering, searching, accumulating).</li>
+              <li>Basic debugging — <code>print()</code> to inspect values mid-run, and reading a <strong>traceback</strong> bottom-up to find the failing line and exception type.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> a loop repeats work; the trick is a correct <b>stopping condition</b>. <code>while x &gt; 1: x = x // 2</code> halves <code>x</code> until it reaches 1.</p>
             <div class="tags"><a class="tag demo-link" href="./index.html#flow">demo: loops &amp; break/continue</a><span class="tag read">tracebacks</span></div>
           </div>
 
@@ -287,11 +373,12 @@
             <div class="sess-head"><span class="sess-num">S05</span><span class="sess-title">Functions I</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Modularity: defining and calling functions.</p>
             <ul class="topics">
-              <li>What is a function? Why modularity matters in software</li>
-              <li>Creating user-defined functions with <code>def</code></li>
-              <li>Positional arguments and return values</li>
-              <li>Keyword arguments and default values</li>
+              <li>A <strong>function</strong> is a named, reusable block that takes inputs and produces an output — the unit of modularity that keeps programs DRY (don't repeat yourself) and testable.</li>
+              <li>Defining functions with <code>def name(params):</code> and a body; calling them transfers control, runs the body, and comes back.</li>
+              <li><strong>Positional arguments</strong> matched by order; <code>return</code> hands a value back to the caller (a function with no <code>return</code> yields <code>None</code>).</li>
+              <li><strong>Keyword arguments</strong> passed by name and <strong>default values</strong> that make parameters optional.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> name a computation once, reuse it everywhere — <code>def area(w, h=1): return w * h</code>.</p>
             <div class="tags"><span class="tag read">functions &amp; parameters</span></div>
           </div>
 
@@ -299,10 +386,11 @@
             <div class="sess-head"><span class="sess-num">S06</span><span class="sess-title">Functions II</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Documentation, recursion, and testing functions.</p>
             <ul class="topics">
-              <li>Docstrings and type hints; why they matter for maintainability</li>
-              <li>Function recursion: how a function can call itself</li>
-              <li>Debugging functions: tracing inputs/outputs, minimal tests</li>
+              <li><strong>Docstrings</strong> (<code>"""..."""</code>) document what a function does; <strong>type hints</strong> (<code>def f(x: int) -&gt; int</code>) state expected types — both aid readability and maintainability.</li>
+              <li><strong>Recursion</strong> — a function that calls itself on a smaller subproblem until a <em>base case</em> stops the descent (e.g. factorial, tree traversal).</li>
+              <li>Debugging functions by tracing inputs/outputs and writing minimal tests that pin down expected behavior.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> every recursion needs a <b>base case</b> + a step toward it — <code>def fact(n): return 1 if n &lt;= 1 else n * fact(n-1)</code>.</p>
             <div class="tags">
               <a class="tag demo-link" href="./index.html#stack">demo: recursion &amp; call stack</a>
               <a class="tag demo-link" href="./index.html#memo">demo: recursion tree &amp; memoization</a>
@@ -313,10 +401,11 @@
             <div class="sess-head"><span class="sess-num">S07</span><span class="sess-title">Functions III</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Scope, generators, and functional-programming basics.</p>
             <ul class="topics">
-              <li>Scope and program reasoning: local/global, variable lifetime, side effects</li>
-              <li>Iterators &amp; generators: <code>yield</code>, lazy evaluation (streaming/large inputs)</li>
-              <li>Functional programming basics: <code>lambda</code>, <code>map</code>, <code>filter</code></li>
+              <li><strong>Scope</strong> (LEGB: Local → Enclosing → Global → Built-in) governs where a name is visible and how long it lives; uncontrolled <em>side effects</em> on global state make code hard to reason about.</li>
+              <li><strong>Generators</strong> use <code>yield</code> to produce values one at a time (<strong>lazy evaluation</strong>), so you can stream huge or infinite sequences without holding them all in memory.</li>
+              <li>Functional tools — anonymous <code>lambda</code> functions, plus <code>map</code> (transform) and <code>filter</code> (select) — apply a function across a sequence declaratively.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> lazy &amp; functional style processes data as a pipeline — <code>list(map(lambda x: x*x, filter(lambda x: x&gt;0, nums)))</code>.</p>
             <div class="tags">
               <a class="tag demo-link" href="./index.html#scope">demo: scope &amp; closures (LEGB)</a>
               <a class="tag demo-link" href="./index.html#hof">demo: map / filter / reduce</a>
@@ -330,18 +419,26 @@
         <p class="module-desc">Working with Python's core data structures — lists/tuples, sets, and dictionaries —
           practicing iterating, indexing, and building structures efficiently. Covers mutability and side effects in
           functions, and concludes with an exercise-based review and a midterm exam over Modules 1–2.</p>
+        <div class="subhead">Learning outcomes — Module 2</div>
+        <ul class="obj">
+          <li>Choose the right container — <strong>list, tuple, set, dictionary</strong> — based on its properties and cost.</li>
+          <li>Iterate, index and slice sequences, and build structures concisely with <strong>list comprehensions</strong>.</li>
+          <li>Use sets for <strong>deduplication and fast membership</strong>, and dictionaries as <strong>hash maps</strong> for key/value lookup.</li>
+          <li>Predict how <strong>mutability</strong> lets functions change shared data, and design safer "in-place vs. return-new" APIs.</li>
+        </ul>
         <div class="timeline">
 
           <div class="sess">
             <div class="sess-head"><span class="sess-num">S08</span><span class="sess-title">Core data structures and iterations</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Introducing the four core containers and how to iterate/index them.</p>
             <ul class="topics">
-              <li>Properties of lists, tuples, sets and dictionaries</li>
-              <li>Iterables: lists and tuples</li>
-              <li>Using indexes to retrieve values from inside an iterable</li>
-              <li>Initializing iterables and changing their contents</li>
-              <li>What is list comprehension?</li>
+              <li>The four core containers: <strong>list</strong> (ordered, mutable), <strong>tuple</strong> (ordered, immutable), <strong>set</strong> (unordered, unique), <strong>dict</strong> (key→value) — each picked for different access patterns.</li>
+              <li>Iterables — lists and tuples can be walked element by element with a <code>for</code> loop.</li>
+              <li><strong>Indexing</strong> retrieves an element by position (<code>xs[0]</code>, negative indices from the end) and <strong>slicing</strong> takes sub-sequences (<code>xs[1:3]</code>).</li>
+              <li>Initializing containers and mutating their contents (<code>.append()</code>, item assignment).</li>
+              <li><strong>List comprehensions</strong> — a compact <code>[expr for x in xs if cond]</code> form to build a new list in one line.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> pick the container by behavior, not habit. <code>squares = [x*x for x in range(10)]</code> replaces a whole loop.</p>
             <div class="tags"><span class="tag read">sequences &amp; indexing</span></div>
           </div>
 
@@ -349,10 +446,11 @@
             <div class="sess-head"><span class="sess-num">S09</span><span class="sess-title">Sets and membership</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Sets and the operations they make cheap.</p>
             <ul class="topics">
-              <li>Sets in Python</li>
-              <li>Difference between lists, tuples and sets; converting between them</li>
-              <li>Operating with sets: deduplication, membership testing, filtering</li>
+              <li>A <strong>set</strong> stores unique, unordered elements; backed by a hash table it gives near-<em>O(1)</em> membership tests and supports union/intersection/difference.</li>
+              <li>Lists vs. tuples vs. sets — when order and duplicates matter vs. when uniqueness/fast lookup matter; converting with <code>set()</code>, <code>list()</code>, <code>tuple()</code>.</li>
+              <li>Operating with sets: <strong>deduplication</strong> (<code>set(xs)</code>), <strong>membership</strong> (<code>x in s</code>), and filtering against a reference set.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> checking membership in a set is far cheaper than scanning a list — <code>set(a) &amp; set(b)</code> gives shared items instantly.</p>
             <div class="tags"><span class="tag read">set operations</span></div>
           </div>
 
@@ -360,10 +458,11 @@
             <div class="sess-head"><span class="sess-num">S10</span><span class="sess-title">Dictionaries (hash maps)</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Key/value storage and how dictionaries are built.</p>
             <ul class="topics">
-              <li>Dictionaries in Python — what are key-value pairs?</li>
-              <li>Accessing, adding and removing elements</li>
-              <li>Creating dictionaries from lists, tuples and sets</li>
+              <li>A <strong>dictionary</strong> maps unique <em>keys</em> to <em>values</em>; it is Python's <strong>hash map</strong>, giving fast lookup, insertion and deletion by key.</li>
+              <li>Accessing (<code>d[k]</code>, <code>d.get(k)</code>), adding/updating (<code>d[k] = v</code>) and removing (<code>del</code>, <code>.pop()</code>) entries; iterating <code>.keys()</code>, <code>.values()</code>, <code>.items()</code>.</li>
+              <li>Building dicts from other structures — e.g. <code>dict(zip(keys, values))</code> or a dict comprehension.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> dictionaries trade memory for speed: <code>counts[word] = counts.get(word, 0) + 1</code> tallies items in one pass.</p>
             <div class="tags"><a class="tag demo-link" href="./index.html#hash">demo: dictionaries as hash maps</a></div>
           </div>
 
@@ -371,9 +470,10 @@
             <div class="sess-head"><span class="sess-num">S11</span><span class="sess-title">Building structures in loops</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Accumulating data structures iteratively in real contexts.</p>
             <ul class="topics">
-              <li>How to initialize data structures and update them inside loops</li>
-              <li>Examples and applications with a focus on CS &amp; AI contexts</li>
+              <li>The <strong>accumulator pattern</strong> — initialize an empty container before a loop, then update it each iteration (build a list, tally a dict, grow a set).</li>
+              <li>Applied to CS &amp; AI tasks: counting tokens, grouping records, building a frequency table or adjacency map.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> "empty container + loop that fills it" is the workhorse pattern for turning raw data into structured results.</p>
             <div class="tags"><span class="tag read">accumulation patterns</span></div>
           </div>
 
@@ -381,9 +481,10 @@
             <div class="sess-head"><span class="sess-num">S12</span><span class="sess-title">Mutability and function effects</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">How functions can change data, and how to write safer APIs.</p>
             <ul class="topics">
-              <li>How functions may affect data structures: the effects of mutability</li>
-              <li>Writing safer APIs: "modify in-place" vs "return a new object"</li>
+              <li><strong>Mutability &amp; aliasing</strong> — arguments are passed by reference, so a function that mutates a list/dict changes the caller's object too (a common source of bugs).</li>
+              <li>Designing safer APIs: decide deliberately between <strong>modify-in-place</strong> (returns <code>None</code>, like <code>list.sort()</code>) and <strong>return-a-new-object</strong> (leaves the input untouched, like <code>sorted()</code>).</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> mutable defaults &amp; shared references bite. <code>sorted(xs)</code> is safe; <code>xs.sort()</code> rewrites the original in place.</p>
             <div class="tags"><a class="tag demo-link" href="./index.html#mut">demo: mutability &amp; side effects</a></div>
           </div>
 
@@ -391,10 +492,11 @@
             <div class="sess-head"><span class="sess-num">S13</span><span class="sess-title">Mid-term review I</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Consolidation through applied exercises.</p>
             <ul class="topics">
-              <li>Review of all content learnt so far through exercises</li>
-              <li>Examples of computer programming applications to CS &amp; AI</li>
-              <li>Group challenge: be the team to first solve the exercises!</li>
+              <li>Integrative review of Modules 1–2 by solving exercises end to end (logic + functions + data structures).</li>
+              <li>Worked CS &amp; AI applications that combine several concepts at once.</li>
+              <li>Group challenge — be the first team to solve the set, practicing collaboration and communication under time pressure.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> fluency comes from combining primitives; review targets the seams where flow control, functions and containers meet.</p>
             <div class="tags"><span class="tag read">problem sets</span></div>
           </div>
 
@@ -402,9 +504,10 @@
             <div class="sess-head"><span class="sess-num">S14</span><span class="sess-title">Mid-term review II</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Exam preparation with a mock.</p>
             <ul class="topics">
-              <li>Review for the midterm exam — covers Modules 1–2</li>
-              <li>Mock exam based on previous years</li>
+              <li>Targeted review for the midterm (Modules 1–2), clarifying frequent misconceptions.</li>
+              <li>A <strong>mock exam</strong> drawn from previous years to rehearse format and timing.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> a timed mock surfaces gaps cheaply — practice under exam conditions before it counts.</p>
             <div class="tags"><span class="tag read">mock exam</span></div>
           </div>
 
@@ -412,8 +515,10 @@
             <div class="sess-head"><span class="sess-num">S15</span><span class="sess-title">Mid-term exam</span><span class="sess-badge flag">assessment</span></div>
             <p class="sess-obj">Checkpoint on foundational understanding and problem-solving.</p>
             <ul class="topics">
-              <li>Scope: Modules 1 and 2</li>
+              <li>Scope: Modules 1 and 2 — computing basics, control flow, functions, scope, and the core data structures.</li>
+              <li>Counts toward the <strong>Quizzes + Midterm</strong> component (25% of the course grade).</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> a midterm checkpoint signals whether the foundations are solid enough to build the ecosystem and array work on top.</p>
             <div class="tags"><span class="tag read">part of Quizzes+Midterm · 25%</span></div>
           </div>
         </div>
@@ -423,17 +528,25 @@
         <p class="module-desc">Practical development workflow: the command line and VS Code, notebooks in VS Code, and
           running programs locally. Students learn to write and execute scripts, organize code into modules and imports,
           and manage environments and dependencies (conda/pip), with a short introduction to object-oriented programming.</p>
+        <div class="subhead">Learning outcomes — Module 3</div>
+        <ul class="obj">
+          <li>Navigate the <strong>terminal</strong> and run Python from both the CLI and an IDE (VS Code).</li>
+          <li>Organize code into <strong>scripts, modules and imports</strong> with a clean <code>if __name__ == "__main__"</code> entry point.</li>
+          <li>Create and manage <strong>isolated environments</strong> and install dependencies with pip/Conda for reproducibility.</li>
+          <li>Contrast <strong>procedural, functional and object-oriented</strong> paradigms and write a small class with attributes and methods.</li>
+        </ul>
         <div class="timeline">
 
           <div class="sess">
             <div class="sess-head"><span class="sess-num">S16</span><span class="sess-title">Command Line Interface &amp; IDE</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Moving from notebooks to a real local development environment.</p>
             <ul class="topics">
-              <li>Introduction to the CLI: terminal fundamentals</li>
-              <li>Python IDEs: PyCharm, Spyder, VS Code</li>
-              <li>Downloading and installing VS Code</li>
-              <li>Running code: terminal vs UI; Jupyter notebooks in VS Code</li>
+              <li>The <strong>command line (CLI)</strong> — navigating folders and running programs by typing commands (<code>cd</code>, <code>ls</code>, <code>python file.py</code>) instead of clicking.</li>
+              <li><strong>IDEs</strong> compared — PyCharm, Spyder, VS Code; what an editor + integrated terminal + debugger buys you over a bare notebook.</li>
+              <li>Installing and configuring <strong>VS Code</strong> (in English) as the course's primary local environment.</li>
+              <li>Two ways to run code — from the terminal vs. the editor UI — and using Jupyter notebooks inside VS Code.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> the terminal is the universal control surface for development; <code>python script.py</code> is the same everywhere.</p>
             <div class="tags"><span class="tag read">VS Code setup</span><span class="tag read">terminal basics</span></div>
           </div>
 
@@ -441,10 +554,11 @@
             <div class="sess-head"><span class="sess-num">S17</span><span class="sess-title">Scripts, modules and imports</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Structuring real programs across files.</p>
             <ul class="topics">
-              <li>Writing scripts in Python</li>
-              <li>Running scripts: execution order and the <code>main</code> function</li>
-              <li>Code reusability: importing functions from other scripts</li>
+              <li>Writing <strong>scripts</strong> — standalone <code>.py</code> files that run top to bottom, unlike cell-by-cell notebooks.</li>
+              <li>Execution order and the <code>if __name__ == "__main__":</code> guard — separating reusable definitions from code that should only run when the file is executed directly.</li>
+              <li>Reusing code by <strong>importing</strong> functions from one module into another (<code>from utils import clean</code>).</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> split code into <b>modules</b> of related functions and import them; the <code>__main__</code> guard keeps a file usable as both a script and a library.</p>
             <div class="tags"><span class="tag read">modules &amp; imports</span></div>
           </div>
 
@@ -452,10 +566,11 @@
             <div class="sess-head"><span class="sess-num">S18</span><span class="sess-title">Environments and dependencies</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Isolating and reproducing project environments.</p>
             <ul class="topics">
-              <li>Introduction to Python environments</li>
-              <li>Managing environments with Conda</li>
-              <li>Installing libraries with <code>pip</code> and Conda</li>
+              <li><strong>Virtual environments</strong> — an isolated per-project Python with its own packages, so one project's dependencies never clash with another's.</li>
+              <li>Creating and activating environments with <strong>Conda</strong> (and the idea of <code>venv</code>).</li>
+              <li>Installing libraries with <code>pip install</code> and <code>conda install</code>; capturing them so a project is <strong>reproducible</strong> on another machine.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> "works on my machine" is solved by isolating dependencies per project — <code>conda create -n proj python=3.11</code>.</p>
             <div class="tags"><span class="tag read">pip / conda / venv</span></div>
           </div>
 
@@ -463,11 +578,12 @@
             <div class="sess-head"><span class="sess-num">S19</span><span class="sess-title">Introduction to Object-Oriented Programming</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Comparing paradigms and the basics of classes.</p>
             <ul class="topics">
-              <li>Programming paradigms: procedural vs. functional vs. object-oriented</li>
-              <li>Why OOP: abstraction, encapsulation, code organization in larger systems</li>
-              <li>Classes and objects: defining a class, creating objects, attributes and methods</li>
-              <li>Coding a mini OOP example</li>
+              <li><strong>Paradigms</strong> — <em>procedural</em> (steps), <em>functional</em> (transform data via functions), and <em>object-oriented</em> (bundle data with the behavior that acts on it); each suits different problems.</li>
+              <li>Why OOP: <strong>abstraction</strong> (hide detail), <strong>encapsulation</strong> (keep state with its methods), and cleaner organization as systems grow.</li>
+              <li>Classes &amp; objects — a <strong>class</strong> is a blueprint; an <strong>object</strong> is an instance with <strong>attributes</strong> (data) and <strong>methods</strong> (functions), defined via <code>__init__</code> and <code>self</code>.</li>
+              <li>Coding a mini OOP example end to end.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> a class bundles state with behavior — <code>class Dog: def __init__(self, name): self.name = name</code>; then <code>Dog("Rex").name</code>.</p>
             <div class="tags">
               <a class="tag demo-link" href="./index.html#hof">demo: functional tools (paradigm contrast)</a>
               <span class="tag read">classes &amp; objects</span>
@@ -480,16 +596,24 @@
         <p class="module-desc">Numerical and data-oriented programming with NumPy. Introduces file/data handling, pandas
           for tabular data, and Matplotlib for visualization and exporting results, leading into the project wrap-up and
           final review.</p>
+        <div class="subhead">Learning outcomes — Module 4</div>
+        <ul class="obj">
+          <li>Use the <strong>NumPy ndarray</strong> as the core scientific data type — create, index, slice and reshape arrays.</li>
+          <li>Compute with <strong>vectorized, broadcast</strong> operations instead of Python loops, and explain why it is faster.</li>
+          <li>Read and write data from disk (<strong>text, CSV, JSON</strong>) and compute <strong>descriptive statistics</strong> for ML prep.</li>
+          <li>Clean and aggregate tabular data with <strong>pandas</strong>, visualize it with <strong>Matplotlib</strong>, and export reproducible outputs.</li>
+        </ul>
         <div class="timeline">
 
           <div class="sess">
             <div class="sess-head"><span class="sess-num">S20</span><span class="sess-title">NumPy foundations</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">The array as the core scientific-computing data type.</p>
             <ul class="topics">
-              <li>Introduction to NumPy</li>
-              <li>Creating and manipulating arrays</li>
-              <li>Array indexing and slicing</li>
+              <li><strong>NumPy</strong> — the foundation of Python scientific computing; its <code>ndarray</code> stores numbers in a contiguous, typed block for fast bulk math.</li>
+              <li>Creating arrays (<code>np.array</code>, <code>np.zeros</code>, <code>np.arange</code>, <code>np.linspace</code>) and inspecting <code>.shape</code>/<code>.dtype</code>.</li>
+              <li>Indexing and slicing — like lists but extended to multiple dimensions and <em>boolean/fancy</em> indexing.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> an ndarray is a fixed-type grid of numbers; that uniformity is what makes vectorized math fast — <code>np.arange(6).reshape(2, 3)</code>.</p>
             <div class="tags"><a class="tag demo-link" href="./index.html#numpy">demo: NumPy vectorization</a></div>
           </div>
 
@@ -497,10 +621,11 @@
             <div class="sess-head"><span class="sess-num">S21</span><span class="sess-title">Vectorized operations</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Element-wise computation and broadcasting.</p>
             <ul class="topics">
-              <li>Arithmetic operations on NumPy arrays</li>
-              <li>Broadcasting in NumPy</li>
-              <li>NumPy built-in methods and functions</li>
+              <li><strong>Element-wise arithmetic</strong> — <code>a + b</code>, <code>a * 2</code> apply across the whole array at once, no explicit loop.</li>
+              <li><strong>Broadcasting</strong> — NumPy's rules for combining arrays of different but compatible shapes (e.g. adding a row vector to every row of a matrix).</li>
+              <li>Built-in <strong>ufuncs</strong> and aggregations (<code>np.sqrt</code>, <code>np.sum</code>, <code>np.mean</code>, axis arguments).</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> broadcasting stretches shapes so operations "just work" — <code>matrix - matrix.mean(axis=0)</code> centers each column.</p>
             <div class="tags"><a class="tag demo-link" href="./index.html#numpy">demo: broadcasting</a></div>
           </div>
 
@@ -508,10 +633,11 @@
             <div class="sess-head"><span class="sess-num">S22</span><span class="sess-title">Shapes and transformations</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Reshaping data to fit different computations.</p>
             <ul class="topics">
-              <li>Reshaping and resizing arrays</li>
-              <li>Joining and splitting arrays</li>
-              <li>Changing array shapes and dimensions</li>
+              <li><strong>Reshaping</strong> reinterprets the same data in a new shape (<code>reshape</code>, <code>ravel</code>) without copying when possible.</li>
+              <li><strong>Joining</strong> (<code>concatenate</code>, <code>stack</code>) and <strong>splitting</strong> (<code>split</code>) arrays to assemble or break apart datasets.</li>
+              <li>Adding/removing dimensions (<code>newaxis</code>, <code>transpose</code>) to make shapes line up for an operation.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> the same numbers can wear many shapes; getting shapes right is half of array programming — <code>x.reshape(-1, 1)</code> makes a column.</p>
             <div class="tags"><span class="tag read">ndarray shapes</span></div>
           </div>
 
@@ -519,10 +645,11 @@
             <div class="sess-head"><span class="sess-num">S23</span><span class="sess-title">Data &amp; file handling for scientific computing</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Reading and writing data to and from disk.</p>
             <ul class="topics">
-              <li>Paths and folders (relative vs absolute); reading/writing text files</li>
-              <li>CSV + JSON basics — what they are and when to use each</li>
-              <li>Loading/saving data with NumPy</li>
+              <li><strong>Paths</strong> — relative (from the current folder) vs. absolute (from the root); opening files with <code>with open(...) as f:</code> so they close automatically.</li>
+              <li><strong>CSV</strong> (flat tabular rows) vs. <strong>JSON</strong> (nested key/value) — what each is good for and when to choose it.</li>
+              <li>Loading/saving arrays with NumPy (<code>np.loadtxt</code>, <code>np.save</code>/<code>np.load</code>).</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> programs are useful when they persist results; <code>with open("out.csv", "w") as f:</code> guarantees the file is flushed and closed.</p>
             <div class="tags"><span class="tag read">files · CSV · JSON</span></div>
           </div>
 
@@ -530,10 +657,11 @@
             <div class="sess-head"><span class="sess-num">S24</span><span class="sess-title">Basic statistics with NumPy</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Summarizing data and preparing it for ML.</p>
             <ul class="topics">
-              <li>Descriptive statistics: mean, median, standard deviation</li>
-              <li>Correlation and covariance</li>
-              <li>Normalization and scaling as preparation for ML</li>
+              <li><strong>Descriptive statistics</strong> — mean, median and standard deviation summarize a dataset's center and spread (<code>np.mean</code>, <code>np.std</code>).</li>
+              <li><strong>Correlation &amp; covariance</strong> measure how two variables move together — a first look at relationships in data.</li>
+              <li><strong>Normalization/scaling</strong> (e.g. z-scoring) puts features on a comparable scale, a standard preprocessing step before machine learning.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> scaling makes features comparable for ML — <code>z = (x - x.mean()) / x.std()</code> gives mean 0, std 1.</p>
             <div class="tags"><span class="tag read">descriptive stats</span></div>
           </div>
 
@@ -541,9 +669,10 @@
             <div class="sess-head"><span class="sess-num">S25</span><span class="sess-title">Performance and vectorization</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Why vectorized code is fast, with a competitive challenge.</p>
             <ul class="topics">
-              <li>The importance of vectorization: writing efficient NumPy code</li>
-              <li>Group challenge: be the team with the fastest code!</li>
+              <li><strong>Vectorization</strong> — replacing Python loops with array operations that run in optimized C under the hood, often 10–100× faster; first awareness of <strong>complexity/performance</strong>.</li>
+              <li>Group challenge — be the team with the fastest correct solution, learning to profile and rewrite hot loops as array ops.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> let NumPy do the loop in C — <code>(a * b).sum()</code> beats a Python <code>for</code> dot-product by a wide margin.</p>
             <div class="tags"><a class="tag demo-link" href="./index.html#numpy">demo: vectorization speedup</a></div>
           </div>
 
@@ -551,10 +680,11 @@
             <div class="sess-head"><span class="sess-num">S26</span><span class="sess-title">Data handling &amp; cleaning with Pandas</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Tabular data with the pandas DataFrame.</p>
             <ul class="topics">
-              <li>Series vs DataFrame; CSV I/O with pandas</li>
-              <li>Selecting/filtering rows &amp; columns; creating/transforming columns; basic cleaning</li>
-              <li>GroupBy + aggregation</li>
+              <li><strong>Series</strong> (one labeled column) vs. <strong>DataFrame</strong> (a labeled table); reading/writing CSV with <code>pd.read_csv</code> / <code>.to_csv</code>.</li>
+              <li>Selecting and filtering rows/columns (<code>.loc</code>, <code>.iloc</code>, boolean masks), creating/transforming columns, and basic <strong>cleaning</strong> (missing values, types).</li>
+              <li><strong>GroupBy + aggregation</strong> — the split-apply-combine pattern to summarize data per category.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> pandas is the spreadsheet you program — <code>df.groupby("class")["score"].mean()</code> summarizes in one line.</p>
             <div class="tags"><span class="tag read">pandas · groupby</span></div>
           </div>
 
@@ -562,10 +692,11 @@
             <div class="sess-head"><span class="sess-num">S27</span><span class="sess-title">Data visualization with Matplotlib</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Turning results into figures and exporting outputs.</p>
             <ul class="topics">
-              <li>Plotting with Matplotlib</li>
-              <li>Choosing the right plot (scatter / line / hist / bar)</li>
-              <li>Saving figures and final datasets</li>
+              <li>Plotting with <strong>Matplotlib</strong> — the figure/axes model and basic <code>plt.plot</code>/<code>plt.scatter</code> calls.</li>
+              <li>Choosing the right chart — <strong>scatter</strong> for relationships, <strong>line</strong> for trends, <strong>histogram</strong> for distributions, <strong>bar</strong> for categories.</li>
+              <li>Exporting <strong>reproducible outputs</strong>: saving figures (<code>savefig</code>) and final datasets to disk.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> the plot type should match the question; an honest figure plus a saved dataset makes results reproducible.</p>
             <div class="tags"><span class="tag read">Matplotlib</span></div>
           </div>
 
@@ -573,8 +704,10 @@
             <div class="sess-head"><span class="sess-num">S28</span><span class="sess-title">Project presentations</span><span class="sess-badge flag">assessment</span></div>
             <p class="sess-obj">Group project showcase.</p>
             <ul class="topics">
-              <li>Presentations of the group projects (CS/AI-oriented objective)</li>
+              <li>In-person presentations of the group projects (a CS/AI- or data-analysis-oriented objective), done in collaboration with <em>Linear Algebra</em>.</li>
+              <li>Assessed on correctness, code quality, reproducibility, presentation clarity, and individual contribution.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> communicating a solution clearly is part of engineering — the presentation is graded alongside the code.</p>
             <div class="tags"><span class="tag read">Group project · 15%</span></div>
           </div>
 
@@ -582,9 +715,10 @@
             <div class="sess-head"><span class="sess-num">S29</span><span class="sess-title">Course review</span><span class="sess-badge">live</span></div>
             <p class="sess-obj">Comprehensive preparation for the final exam.</p>
             <ul class="topics">
-              <li>Review for the final exam — covers Modules 1–4</li>
-              <li>Mock exam based on previous years</li>
+              <li>Cumulative review across all four modules, reconnecting fundamentals, data structures, the ecosystem, and array/data work.</li>
+              <li>A full <strong>mock exam</strong> based on previous years to rehearse scope and pacing.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> the final rewards integration — revisit how each module's tools combine on a single realistic problem.</p>
             <div class="tags"><span class="tag read">final mock</span></div>
           </div>
 
@@ -592,12 +726,68 @@
             <div class="sess-head"><span class="sess-num">S30</span><span class="sess-title">Final exam</span><span class="sess-badge flag">assessment</span></div>
             <p class="sess-obj">Comprehensive assessment of the whole course.</p>
             <ul class="topics">
-              <li>Scope: all Modules 1–4</li>
-              <li>Minimum 3.5/10 required to pass the course overall</li>
+              <li>Scope: all Modules 1–4 — from computing basics through functions, data structures, the Python ecosystem, and NumPy/pandas/Matplotlib.</li>
+              <li>Worth 50% of the course; a minimum of <strong>3.5/10</strong> here is required to pass overall, regardless of other components.</li>
             </ul>
+            <p class="keyidea"><b>Key idea:</b> the final is the gate — strong continuous work still requires clearing the 3.5/10 floor on this exam.</p>
             <div class="tags"><span class="tag read">Final exam · 50%</span></div>
           </div>
         </div>
+      </section>
+
+      <!-- E. KEY CONCEPTS GLOSSARY --------------------------------------- -->
+      <section class="demo" id="glossary">
+        <h2>Key concepts — glossary</h2>
+        <p class="cap">A quick reference to the recurring terms used across the program. One- or two-line definitions in the
+          course's own context.</p>
+        <dl class="gloss">
+          <div class="term"><dt>Compiled vs. interpreted</dt><dd>Compiled languages (C) translate to machine code ahead of time; interpreted ones (Python) execute line by line, trading speed for flexibility.</dd></div>
+          <div class="term"><dt>Pseudocode</dt><dd>Plain structured description of an algorithm's steps, written before real code to reason about logic independent of syntax.</dd></div>
+          <div class="term"><dt>Variable &amp; type</dt><dd>A name bound to a value; the value's type (<code>int</code>, <code>float</code>, <code>bool</code>, <code>str</code>) determines valid operations.</dd></div>
+          <div class="term"><dt>Conditional</dt><dd>An <code>if/elif/else</code> branch that runs different code depending on a boolean test.</dd></div>
+          <div class="term"><dt>Loop</dt><dd>Repeated execution — <code>for</code> over a collection, <code>while</code> until a condition fails; controlled by <code>break</code>/<code>continue</code>.</dd></div>
+          <div class="term"><dt>Traceback</dt><dd>Python's error report; read bottom-up to find the exception type and the line that raised it.</dd></div>
+          <div class="term"><dt>Function</dt><dd>A named, reusable block taking inputs and returning a value — the basic unit of modular, testable code.</dd></div>
+          <div class="term"><dt>Docstring / type hint</dt><dd>In-code documentation (<code>"""..."""</code>) and declared parameter/return types that improve readability and maintainability.</dd></div>
+          <div class="term"><dt>Recursion</dt><dd>A function that calls itself on a smaller subproblem, bottoming out at a base case.</dd></div>
+          <div class="term"><dt>Scope (LEGB)</dt><dd>Where a name is visible: Local, Enclosing, Global, Built-in — resolved in that order.</dd></div>
+          <div class="term"><dt>Generator / lazy evaluation</dt><dd>A function using <code>yield</code> to produce values on demand, avoiding holding a whole sequence in memory.</dd></div>
+          <div class="term"><dt>Functional tools</dt><dd><code>lambda</code>, <code>map</code> and <code>filter</code> — apply or select with functions over a sequence declaratively.</dd></div>
+          <div class="term"><dt>List / tuple</dt><dd>Ordered sequences; lists are mutable, tuples immutable. Indexed and sliced by position.</dd></div>
+          <div class="term"><dt>List comprehension</dt><dd>A compact <code>[expr for x in xs if cond]</code> expression that builds a new list.</dd></div>
+          <div class="term"><dt>Set</dt><dd>Unordered collection of unique items giving fast membership tests and set algebra (union/intersection).</dd></div>
+          <div class="term"><dt>Dictionary (hash map)</dt><dd>A key→value store with fast lookup, insertion and deletion by key.</dd></div>
+          <div class="term"><dt>Mutability &amp; side effect</dt><dd>Whether an object can change in place; functions mutating shared objects cause side effects visible to the caller.</dd></div>
+          <div class="term"><dt>Module / import</dt><dd>A <code>.py</code> file of reusable definitions brought into another file with <code>import</code>.</dd></div>
+          <div class="term"><dt>Virtual environment</dt><dd>An isolated per-project Python with its own packages (Conda/venv) for reproducibility.</dd></div>
+          <div class="term"><dt>Class / object</dt><dd>A class is a blueprint bundling attributes (data) and methods (behavior); an object is an instance of it.</dd></div>
+          <div class="term"><dt>ndarray (NumPy)</dt><dd>A contiguous, fixed-type, N-dimensional array — the core data type for fast numerical computing.</dd></div>
+          <div class="term"><dt>Vectorization</dt><dd>Expressing computation as whole-array operations instead of Python loops, running in optimized C.</dd></div>
+          <div class="term"><dt>Broadcasting</dt><dd>NumPy rules that let arrays of compatible-but-different shapes combine element-wise without manual reshaping.</dd></div>
+          <div class="term"><dt>DataFrame (pandas)</dt><dd>A labeled, spreadsheet-like table; the unit for cleaning, filtering and group-by aggregation.</dd></div>
+          <div class="term"><dt>Normalization / scaling</dt><dd>Rescaling features (e.g. z-score) to a comparable range as preparation for machine learning.</dd></div>
+        </dl>
+      </section>
+
+      <!-- F. ANNOTATED BIBLIOGRAPHY -------------------------------------- -->
+      <section class="demo" id="biblio">
+        <h2>Annotated bibliography &amp; tools</h2>
+        <p class="cap">Core references and the tooling used throughout the course, each with a one-line note and the sessions
+          where it is most relevant. The official syllabus does not prescribe a single textbook; the items below are the
+          standard documentation and widely used companions for the topics covered.</p>
+        <ul class="biblio">
+          <li><span class="bt">The Python Tutorial &amp; Language Reference (docs.python.org)</span> — the authoritative source for syntax, types, functions and the standard library. <span class="bw">Sessions 2–19</span></li>
+          <li><span class="bt">Google Colab</span> — zero-install browser notebooks; the everyday environment for early exercises. <span class="bw">Sessions 2–15</span></li>
+          <li><span class="bt">"Automate the Boring Stuff with Python" (Sweigart)</span> — beginner-friendly take on scripts, files and practical automation. <span class="bw">Sessions 1–7, 17, 23</span></li>
+          <li><span class="bt">"Think Python" (Downey)</span> — clear treatment of variables, control flow, functions, recursion and scope. <span class="bw">Sessions 1–7</span></li>
+          <li><span class="bt">Python <code>collections</code> &amp; data-model docs</span> — reference for lists, tuples, sets, dicts and their methods. <span class="bw">Sessions 8–12</span></li>
+          <li><span class="bt">VS Code documentation</span> — installing, running, and debugging Python locally; integrated terminal and notebooks. <span class="bw">Sessions 16–17</span></li>
+          <li><span class="bt">Conda / pip user guides</span> — creating environments and installing dependencies reproducibly. <span class="bw">Session 18</span></li>
+          <li><span class="bt">NumPy documentation (Absolute Beginner's Guide)</span> — arrays, indexing, broadcasting and vectorized operations. <span class="bw">Sessions 20–25</span></li>
+          <li><span class="bt">pandas documentation ("10 minutes to pandas")</span> — Series/DataFrame, I/O, filtering, cleaning and group-by. <span class="bw">Session 26</span></li>
+          <li><span class="bt">Matplotlib documentation (Pyplot tutorial)</span> — building, choosing and exporting figures. <span class="bw">Session 27</span></li>
+          <li><span class="bt">Interactive demos in this repo</span> — runnable visualizations of execution, flow, recursion, scope, hashing, mutability and vectorization. <span class="bw">cross-linked per session</span></li>
+        </ul>
       </section>
     </main>
 
