@@ -1,0 +1,11 @@
+{
+  "name": "programming-principles-lab",
+  "version": "1.0.0",
+  "description": "Algorithm kernels behind the Principles of Programming lab, with tests.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  },
+  "license": "MIT"
+}

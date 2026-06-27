@@ -10,7 +10,17 @@
 //
 // `draw` resets the canvas transform and clears before drawing, so resizes
 // and rapid input can never compound state.
+//
+// The genuinely-algorithmic kernels each demo traces live in their own
+// DOM-free, unit-tested ES modules (see ./*.js + ../test/). The demos import
+// them below so the page runs the exact code the tests cover.
 // ============================================================
+
+import { naiveFibCalls, memoizedFib } from './recursion.js';
+import { traceLoop } from './flow.js';
+import { inputList, mapSquares, filterEvens, reduceSum } from './hof.js';
+import { hashStr, HashMap } from './hashmap.js';
+import { broadcast } from './broadcasting.js';
 
 // ---------- helpers ------------------------------------------------------
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
@@ -157,25 +167,9 @@ function rrect(ctx, x, y, w, h, r) {
   // precompute the full trace so stepping is just an index into events.
   let trace = [], idx = 0;
 
-  function guard(i) {
-    switch ($('fl-cond').value) {
-      case 'odd':  return i % 2 === 1;
-      case 'even': return i % 2 === 0;
-      case 'ge3':  return i >= 3;
-    }
-    return false;
-  }
   function build() {
-    const N = n('fl-n', 6), act = $('fl-act').value;
-    trace = []; let total = 0;
-    for (let i = 0; i < N; i++) {
-      const hit = guard(i);
-      if (hit && act === 'break') { trace.push({ i, total, line: 'break', stop: true }); break; }
-      if (hit && act === 'continue') { trace.push({ i, total, line: 'continue', skip: true }); continue; }
-      total += i;
-      trace.push({ i, total, line: 'total += i' });
-    }
-    trace.push({ i: null, total, line: 'done', done: true });
+    // delegate the loop replay to the unit-tested flow module
+    trace = traceLoop(n('fl-n', 6), $('fl-cond').value, $('fl-act').value).trace;
     idx = 0;
   }
   function draw() {
@@ -373,12 +367,6 @@ function rrect(ctx, x, y, w, h, r) {
     const root = node(N);
     return { root, calls };
   }
-  function naiveCalls(N) {
-    // number of fib() invocations in the unmemoized tree = 2*fib(N+1) - 1
-    let a = 0, b = 1;
-    for (let i = 0; i < N + 1; i++) { const t = a + b; a = b; b = t; }
-    return 2 * a - 1; // a == fib(N+1) here
-  }
 
   function draw() {
     const { ctx, w, h } = fitCanvas(cv);
@@ -427,10 +415,11 @@ function rrect(ctx, x, y, w, h, r) {
     })(root);
     ctx.textAlign = 'left';
 
-    setText('mo-val', `${root.val}`);
+    // fib(n) value comes from the unit-tested memoized kernel
+    setText('mo-val', `${memoizedFib(N).value}`);
     setText('mo-calls', `${calls}`);
     setColor('mo-calls', memoize ? GOOD : (calls > 2 * N ? WARN : ACCENT));
-    setText('mo-naive', `${naiveCalls(N)}`);
+    setText('mo-naive', `${naiveFibCalls(N)}`);
   }
   $('mo-n').addEventListener('input', draw);
   $('mo-cache').addEventListener('change', draw);
@@ -527,14 +516,16 @@ function rrect(ctx, x, y, w, h, r) {
 
   function build() {
     const N = clamp(n('hf-n', 6), 3, 9);
-    input = Array.from({ length: N }, (_, i) => i + 1);
+    input = inputList(N);                       // [1..N] from the hof module
     const op = $('hf-op').value;
     steps = [];
     if (op === 'map') {
-      input.forEach((x, i) => steps.push({ i, kept: true, out: x * x, acc: null }));
+      const out = mapSquares(input);            // tested map(x => x*x)
+      input.forEach((x, i) => steps.push({ i, kept: true, out: out[i], acc: null }));
     } else if (op === 'filter') {
-      input.forEach((x, i) => steps.push({ i, kept: x % 2 === 0, out: x, acc: null }));
-    } else { // reduce
+      const kept = new Set(filterEvens(input)); // tested filter(x => x % 2 === 0)
+      input.forEach((x, i) => steps.push({ i, kept: kept.has(x), out: x, acc: null }));
+    } else { // reduce — running prefix sums, final acc === reduceSum(input)
       let acc = 0;
       input.forEach((x, i) => { acc += x; steps.push({ i, kept: true, out: x, acc }); });
     }
@@ -545,6 +536,8 @@ function rrect(ctx, x, y, w, h, r) {
     const done = steps.slice(0, idx);
     if (op === 'map') return '[' + done.map(s => s.out).join(', ') + ']';
     if (op === 'filter') return '[' + done.filter(s => s.kept).map(s => s.out).join(', ') + ']';
+    // reduce: show the running fold; once every element is folded it equals reduceSum(input)
+    if (idx >= input.length) return `${reduceSum(input)}`;
     return done.length ? `${done[done.length - 1].acc}` : '0';
   }
   function draw() {
@@ -765,27 +758,17 @@ function rrect(ctx, x, y, w, h, r) {
 // ============================================================
 (function hashmap() {
   const cv = $('cv-hash'); if (!cv) return;
-  let buckets = []; // array of arrays of {key, hash}
+  // backing store is the unit-tested HashMap (djb2 hash, separate chaining)
+  let map = new HashMap(clamp(n('ha-b', 8), 4, 12));
 
-  // a small deterministic string hash (djb2-ish) so results are reproducible.
-  function hashStr(s) {
-    let hHash = 5381;
-    for (let i = 0; i < s.length; i++) hHash = ((hHash * 33) ^ s.charCodeAt(i)) >>> 0;
-    return hHash;
-  }
   function rebuild() {
     const B = clamp(n('ha-b', 8), 4, 12);
-    const old = buckets.flat();
-    buckets = Array.from({ length: B }, () => []);
-    old.forEach(item => insert(item.key, false));
+    const keys = map.buckets.flat().map(it => it.key);
+    map = new HashMap(B);
+    keys.forEach(k => map.put(k));
   }
   function insert(key, redraw) {
-    key = (key || '').trim();
-    if (!key) return;
-    const B = buckets.length || clamp(n('ha-b', 8), 4, 12);
-    if (buckets.length === 0) buckets = Array.from({ length: B }, () => []);
-    const slot = hashStr(key) % buckets.length;
-    if (!buckets[slot].some(it => it.key === key)) buckets[slot].push({ key, hash: hashStr(key) });
+    map.put(key);
     if (redraw) draw();
   }
   function draw() {
@@ -793,11 +776,11 @@ function rrect(ctx, x, y, w, h, r) {
     ctx.clearRect(0, 0, w, h);
     const B = clamp(n('ha-b', 8), 4, 12);
     setText('ha-bv', B);
-    if (buckets.length !== B) rebuild();
+    if (map.size !== B) rebuild();
+    const buckets = map.buckets;
 
     const rowH = Math.min(26, (h - 30) / B), gx = 30, gy = 18, lblW = 30, cellW = 70;
     ctx.textAlign = 'left';
-    let collisions = 0, count = 0;
     for (let i = 0; i < B; i++) {
       const y = gy + i * rowH;
       // slot index
@@ -807,8 +790,6 @@ function rrect(ctx, x, y, w, h, r) {
       ctx.strokeStyle = RULE; ctx.lineWidth = 1;
       ctx.strokeRect(gx + lblW, y, w - gx - lblW - 14, rowH - 3);
       const chain = buckets[i];
-      count += chain.length;
-      if (chain.length > 1) collisions += chain.length - 1;
       chain.forEach((it, k) => {
         const x = gx + lblW + 6 + k * (cellW + 8);
         if (x + cellW > w - 16) return; // clip overflow
@@ -831,7 +812,7 @@ function rrect(ctx, x, y, w, h, r) {
     setText('ha-hash', hv === null ? '—' : `${hv}`);
     setText('ha-slot', hv === null ? '—' : `${hv % B}`);
     setColor('ha-slot', ACCENT);
-    const load = (count / B);
+    const count = map.count(), load = map.loadFactor(), collisions = map.collisions();
     setText('ha-load', `${count}/${B} = ${load.toFixed(2)}`);
     setColor('ha-load', load > 0.75 ? WARN : INK_S);
     setText('ha-coll', `${collisions}`);
@@ -841,7 +822,7 @@ function rrect(ctx, x, y, w, h, r) {
   $('ha-key').addEventListener('keydown', e => { if (e.key === 'Enter') insert($('ha-key').value, true); });
   $('ha-key').addEventListener('input', draw);
   $('ha-b').addEventListener('input', () => { rebuild(); draw(); });
-  $('ha-clear').addEventListener('click', () => { buckets = Array.from({ length: clamp(n('ha-b', 8), 4, 12) }, () => []); draw(); });
+  $('ha-clear').addEventListener('click', () => { map = new HashMap(clamp(n('ha-b', 8), 4, 12)); draw(); });
   window.addEventListener('resize', draw);
   // seed with a couple of keys so the picture isn't empty
   insert('cat', false); insert('dog', false); insert('fox', false);
@@ -857,14 +838,7 @@ function rrect(ctx, x, y, w, h, r) {
   const SHAPES = {
     scalar: [1, 1], r13: [1, 3], c31: [3, 1], m33: [3, 3], r12: [1, 2],
   };
-  // numpy broadcasting rule: compare trailing dims; each must be equal or 1.
-  function broadcast(a, b) {
-    const [ar, ac] = a, [br, bc] = b;
-    const rowsOk = ar === br || ar === 1 || br === 1;
-    const colsOk = ac === bc || ac === 1 || bc === 1;
-    if (!rowsOk || !colsOk) return null;
-    return [Math.max(ar, br), Math.max(ac, bc)];
-  }
+  // broadcasting rule lives in the unit-tested ./broadcasting.js module
   function valAt(shape, i, j) {
     const [r, c] = shape;
     const ri = r === 1 ? 0 : i, cj = c === 1 ? 0 : j;
