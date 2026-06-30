@@ -155,6 +155,24 @@
       .wtable th { background: var(--paper); color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; font-size: 0.68rem; }
       .wtable td:first-child, .wtable th:first-child { text-align: left; color: var(--ink-soft); }
       .wtable td.hot { color: var(--accent); font-weight: 700; }
+
+      /* practice problems */
+      .pp { margin-top: 0.8rem; border: 1px solid var(--rule); border-radius: 8px; padding: 0.7rem 0.85rem; background: var(--bg); }
+      .pp:first-of-type { margin-top: 0.5rem; }
+      .pp .ppq { font-size: 0.86rem; color: var(--ink); line-height: 1.5; }
+      .pp .ppq .qn { font-family: var(--font-mono); font-weight: 700; color: var(--accent); margin-right: 0.4rem; }
+      .pp .pptag { font-family: var(--font-mono); font-size: 0.62rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); border: 1px solid var(--rule-h); border-radius: 4px; padding: 0.08em 0.4em; margin-left: 0.4rem; white-space: nowrap; }
+      .pp .ppq code, .ppsol code { font-family: var(--font-mono); font-size: 0.92em; color: var(--accent); }
+      .ppsol { margin-top: 0.5rem; border-top: 1px dotted var(--rule); padding-top: 0.45rem; }
+      .ppsol > summary { cursor: pointer; font-size: 0.78rem; font-weight: 600; color: var(--accent); list-style: none; display: inline-flex; align-items: center; gap: 0.35rem; }
+      .ppsol > summary::-webkit-details-marker { display: none; }
+      .ppsol > summary::before { content: '▸'; font-size: 0.72rem; transition: transform 0.15s ease; }
+      .ppsol[open] > summary::before { transform: rotate(90deg); }
+      .ppsol > summary:hover { text-decoration: underline; }
+      .ppsol .sol { margin-top: 0.45rem; font-size: 0.82rem; color: var(--ink-soft); line-height: 1.5; }
+      .ppsol .sol b { color: var(--ink); }
+      .ppsol .ans { margin-top: 0.45rem; padding: 0.4rem 0.6rem; border-left: 2px solid var(--accent); background: var(--accent-soft); border-radius: 0 5px 5px 0; font-size: 0.82rem; color: var(--ink-soft); }
+      .ppsol .ans b { color: var(--ink); }
 </style>
   </head>
   <body>
@@ -172,6 +190,7 @@
         <a href="#assess">assessment</a>
         <a href="#program">program</a>
         <a href="#examples">worked examples</a>
+        <a href="#practice">practice</a>
         <a href="#glossary">glossary</a>
         <a href="#biblio">bibliography</a>
         <a href="./SYLLABUS.pdf" target="_blank">syllabus PDF</a>
@@ -840,6 +859,91 @@
             <li><b>Result = 56</b> (same as sum(x*x for x in data if x % 2 == 0)).</li>
           </ol>
           <p class="wnote"><b>Takeaway:</b> filter selects, map transforms, reduce folds a sequence to a single value. A generator expression is usually the more readable Pythonic form of the same pipeline.</p>
+        </div>
+      </section>
+
+      <!-- PRACTICE PROBLEMS -->
+      <section class="demo" id="practice">
+        <h2>Practice problems</h2>
+        <p class="cap">Six "predict the output" problems spanning the syllabus — work out each result on paper first, then
+          open the solution and run it in Colab to confirm. Where the worked examples above <em>demonstrate</em> a
+          concept, these are yours to <em>practise</em>.</p>
+
+        <div class="pp">
+          <div class="ppq"><span class="qn">Q1</span>What list does this build? <code>out=[]</code>; <code>for i in range(1,10): </code> with <code>if i%2: continue</code>, then <code>out.append(i)</code>, then <code>if i&gt;=6: break</code>. <span class="pptag">control flow</span></div>
+          <details class="ppsol">
+            <summary>Show solution</summary>
+            <div class="sol">
+              <code>i % 2</code> is truthy for odd i, so <code>continue</code> skips 1, 3, 5, 7, 9.<br>
+              Even i are appended: 2, then 4, then 6.<br>
+              At i = 6 the test <code>i &gt;= 6</code> is true, so <code>break</code> stops the loop.
+            </div>
+            <div class="ans"><b>Answer:</b> <code>[2, 4, 6]</code>.</div>
+          </details>
+        </div>
+
+        <div class="pp">
+          <div class="ppq"><span class="qn">Q2</span>For <code>s = "python"</code>, give <code>s[1:4]</code>, <code>s[::-1]</code>, and <code>s[-2:]</code>. <span class="pptag">strings · slicing</span></div>
+          <details class="ppsol">
+            <summary>Show solution</summary>
+            <div class="sol">
+              <code>s[1:4]</code> = characters at indices 1,2,3 = <code>"yth"</code> (stop index 4 excluded).<br>
+              <code>s[::-1]</code> = the whole string with step −1 = <code>"nohtyp"</code>.<br>
+              <code>s[-2:]</code> = from the 2nd-last to the end = <code>"on"</code>.
+            </div>
+            <div class="ans"><b>Answer:</b> <code>"yth"</code>, <code>"nohtyp"</code>, <code>"on"</code>.</div>
+          </details>
+        </div>
+
+        <div class="pp">
+          <div class="ppq"><span class="qn">Q3</span>For <code>a = {1,2,3}</code> and <code>b = {2,3,4}</code>, evaluate <code>a &amp; b</code>, <code>a | b</code>, and <code>a - b</code>. <span class="pptag">sets</span></div>
+          <details class="ppsol">
+            <summary>Show solution</summary>
+            <div class="sol">
+              Intersection <code>a &amp; b</code> = elements in both = <code>{2, 3}</code>.<br>
+              Union <code>a | b</code> = elements in either = <code>{1, 2, 3, 4}</code>.<br>
+              Difference <code>a - b</code> = in a but not b = <code>{1}</code>.
+            </div>
+            <div class="ans"><b>Answer:</b> <code>{2, 3}</code>, <code>{1, 2, 3, 4}</code>, <code>{1}</code>.</div>
+          </details>
+        </div>
+
+        <div class="pp">
+          <div class="ppq"><span class="qn">Q4</span>Given <code>def f(x, acc=[]): acc.append(x); return acc</code>, what do <code>print(f(1))</code> then <code>print(f(2))</code> output? <span class="pptag">functions · gotcha</span></div>
+          <details class="ppsol">
+            <summary>Show solution</summary>
+            <div class="sol">
+              The default <code>acc=[]</code> is created <b>once</b>, when the function is defined, and is shared across calls.<br>
+              First call: append 1 → the list is <code>[1]</code>, printed as <code>[1]</code>.<br>
+              Second call: the <i>same</i> list already holds [1]; append 2 → <code>[1, 2]</code>.
+            </div>
+            <div class="ans"><b>Answer:</b> <code>[1]</code> then <code>[1, 2]</code> — the classic mutable-default trap. Fix it with <code>acc=None</code> and create a fresh list inside.</div>
+          </details>
+        </div>
+
+        <div class="pp">
+          <div class="ppq"><span class="qn">Q5</span>For <code>def fib(n): return n if n&lt;2 else fib(n-1)+fib(n-2)</code>, compute <code>fib(6)</code>. <span class="pptag">recursion</span></div>
+          <details class="ppsol">
+            <summary>Show solution</summary>
+            <div class="sol">
+              Base cases: fib(0)=0, fib(1)=1.<br>
+              Build up: 0, 1, 1, 2, 3, 5, 8 for n = 0…6.<br>
+              So fib(6) = fib(5) + fib(4) = 5 + 3.
+            </div>
+            <div class="ans"><b>Answer:</b> <code>fib(6) = 8</code>.</div>
+          </details>
+        </div>
+
+        <div class="pp">
+          <div class="ppq"><span class="qn">Q6</span>What does the dict comprehension <code>{x: x*x for x in range(1, 5)}</code> produce? <span class="pptag">comprehension</span></div>
+          <details class="ppsol">
+            <summary>Show solution</summary>
+            <div class="sol">
+              <code>range(1, 5)</code> yields 1, 2, 3, 4.<br>
+              Each x becomes a key mapped to x*x.
+            </div>
+            <div class="ans"><b>Answer:</b> <code>{1: 1, 2: 4, 3: 9, 4: 16}</code>.</div>
+          </details>
         </div>
       </section>
 
