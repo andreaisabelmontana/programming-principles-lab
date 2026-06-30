@@ -135,7 +135,27 @@
       ul.biblio li::before { content: '📖'; position: absolute; left: -0.15rem; top: 0; font-size: 0.7rem; }
       ul.biblio li .bt { color: var(--ink); font-weight: 600; }
       ul.biblio li .bw { color: var(--muted); font-size: 0.76rem; font-family: var(--font-mono); }
-    </style>
+    
+      /* worked examples */
+      .wex { margin-top: 0.9rem; border: 1px solid var(--rule); border-radius: 8px; padding: 0.7rem 0.85rem; background: var(--bg); }
+      .wex:first-of-type { margin-top: 0.5rem; }
+      .wex .wtitle { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; font-size: 0.92rem; font-weight: 700; color: var(--ink); }
+      .wex .wtag { font-family: var(--font-mono); font-size: 0.66rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; color: var(--accent); background: var(--accent-soft); padding: 0.12em 0.5em; border-radius: 4px; }
+      .wex .wprob { font-size: 0.84rem; color: var(--ink-soft); margin: 0.45rem 0 0; }
+      .wex .wprob code, .wtrace code, .wex .wnote code, .wtable code { font-family: var(--font-mono); font-size: 0.92em; color: var(--accent); }
+      .wtrace { list-style: none; margin: 0.55rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.3rem; counter-reset: step; }
+      .wtrace li { position: relative; padding-left: 1.7rem; font-size: 0.82rem; color: var(--ink-soft); font-family: var(--font-mono); line-height: 1.45; }
+      .wtrace li::before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: 0.05rem; width: 1.15rem; text-align: center; font-size: 0.7rem; font-weight: 700; color: var(--accent); background: var(--accent-soft); border-radius: 4px; }
+      .wtrace li b { color: var(--ink); }
+      .wex .wnote { margin-top: 0.55rem; font-size: 0.8rem; color: var(--ink-soft); }
+      .wex .wnote b { color: var(--ink); }
+      .wtable-wrap { overflow-x: auto; }
+      .wtable { width: 100%; border-collapse: collapse; margin-top: 0.55rem; font-size: 0.78rem; }
+      .wtable th, .wtable td { border: 1px solid var(--rule); padding: 0.32em 0.55em; text-align: right; font-family: var(--font-mono); white-space: nowrap; }
+      .wtable th { background: var(--paper); color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; font-size: 0.68rem; }
+      .wtable td:first-child, .wtable th:first-child { text-align: left; color: var(--ink-soft); }
+      .wtable td.hot { color: var(--accent); font-weight: 700; }
+</style>
   </head>
   <body>
     <header>
@@ -151,6 +171,7 @@
         <a href="#method">methodology</a>
         <a href="#assess">assessment</a>
         <a href="#program">program</a>
+        <a href="#examples">worked examples</a>
         <a href="#glossary">glossary</a>
         <a href="#biblio">bibliography</a>
         <a href="./SYLLABUS.pdf" target="_blank">syllabus PDF</a>
@@ -737,6 +758,91 @@
       </section>
 
       <!-- E. KEY CONCEPTS GLOSSARY --------------------------------------- -->
+      <!-- WORKED EXAMPLES -->
+      <section class="demo" id="examples">
+        <h2>Worked examples</h2>
+        <p class="cap">Six short programs traced step by step — from recursion to NumPy — so the concepts above become
+          code whose output you can predict on quizzes and the exam. Each trace shows the exact values; run them in
+          Colab to confirm, and compare with the <a href="./index.html">interactive demos</a>.</p>
+
+        <div class="wex">
+          <div class="wtitle"><span class="wtag">recursion</span> The call stack of <code>factorial(4)</code></div>
+          <p class="wprob">Trace <code>def fact(n): return 1 if n &lt;= 1 else n * fact(n-1)</code> for <code>fact(4)</code>.</p>
+          <ol class="wtrace">
+            <li>fact(4) = 4 * fact(3) — pushes a frame, waits.</li>
+            <li>fact(3) = 3 * fact(2) — pushes again.</li>
+            <li>fact(2) = 2 * fact(1) — pushes again.</li>
+            <li>fact(1) = 1 — base case, returns and the stack unwinds.</li>
+            <li>2*1 = 2 → 3*2 = 6 → 4*6 = <b>24</b>.</li>
+          </ol>
+          <p class="wnote"><b>Takeaway:</b> each call waits on the one below it; the base case stops the recursion and the stack unwinds bottom-up. Without the <code>n &lt;= 1</code> base case the stack would grow until a RecursionError.</p>
+        </div>
+
+        <div class="wex">
+          <div class="wtitle"><span class="wtag">comprehension</span> Filter and map in one expression</div>
+          <p class="wprob">Evaluate <code>[x*x for x in range(1, 6) if x % 2]</code>.</p>
+          <ol class="wtrace">
+            <li>range(1, 6) yields 1, 2, 3, 4, 5.</li>
+            <li>Keep only x where x % 2 is truthy (odd): 1, 3, 5.</li>
+            <li>Map each kept value to x*x: 1→1, 3→9, 5→25.</li>
+            <li>Collect into a list: <b>[1, 9, 25]</b>.</li>
+          </ol>
+          <p class="wnote"><b>Takeaway:</b> a comprehension reads as "expression — for — if": the <code>if</code> filters, the leading expression transforms. It is the Pythonic form of a loop that appends to a fresh list.</p>
+        </div>
+
+        <div class="wex">
+          <div class="wtitle"><span class="wtag">dictionaries</span> Counting with a hash map</div>
+          <p class="wprob">Build a word count from <code>["to", "be", "or", "not", "to", "be"]</code> using <code>d.get(w, 0)</code>.</p>
+          <ol class="wtrace">
+            <li>Start empty: d = {}.</li>
+            <li>"to": d.get("to", 0) + 1 → {"to": 1}.</li>
+            <li>"be" → add; "or" → add; "not" → add.</li>
+            <li>second "to": 1 + 1 → 2; second "be": 1 + 1 → 2.</li>
+            <li>Result: <b>{"to": 2, "be": 2, "or": 1, "not": 1}</b>.</li>
+          </ol>
+          <p class="wnote"><b>Takeaway:</b> <code>dict.get(key, default)</code> avoids a KeyError on the first sight of a key. Dict lookups and insertions are average O(1) because a dict is a hash map.</p>
+        </div>
+
+        <div class="wex">
+          <div class="wtitle"><span class="wtag">mutability</span> Aliasing vs. rebinding in a function</div>
+          <p class="wprob">What does each function do to the caller's list <code>xs = [1, 2, 3]</code>?</p>
+          <ol class="wtrace">
+            <li>def grow(a): a.append(4) — mutates the object a refers to.</li>
+            <li>grow(xs) → xs becomes [1, 2, 3, 4] (the caller sees it).</li>
+            <li>def reset(a): a = [0] — rebinds the local name only.</li>
+            <li>reset(xs) → local a points to [0], but xs is unchanged.</li>
+            <li>After both calls: <b>xs == [1, 2, 3, 4]</b>.</li>
+          </ol>
+          <p class="wnote"><b>Takeaway:</b> Python passes references by value. Mutating the object (<code>.append</code>) is visible to the caller; reassigning the parameter (<code>a = ...</code>) only rebinds the local name and is not.</p>
+        </div>
+
+        <div class="wex">
+          <div class="wtitle"><span class="wtag">NumPy</span> Broadcasting a column and a row</div>
+          <p class="wprob">Add <code>col</code> (shape 3×1, values 1,2,3) to <code>row</code> (shape 1×4, values 10,20,30,40).</p>
+          <div class="wtable-wrap"><table class="wtable">
+            <thead><tr><th>col + row</th><th>10</th><th>20</th><th>30</th><th>40</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>11</td><td>21</td><td>31</td><td>41</td></tr>
+              <tr><td>2</td><td>12</td><td>22</td><td>32</td><td>42</td></tr>
+              <tr><td>3</td><td>13</td><td>23</td><td>33</td><td class="hot">43</td></tr>
+            </tbody>
+          </table></div>
+          <p class="wnote"><b>How:</b> NumPy stretches each size-1 axis to match the other operand, so 3×1 and 1×4 both broadcast to <b>3×4</b>. No data is copied — the result is computed element-wise without writing an explicit double loop.</p>
+        </div>
+
+        <div class="wex">
+          <div class="wtitle"><span class="wtag">functions</span> map / filter / reduce</div>
+          <p class="wprob">Compute the sum of squares of the even numbers in <code>[1, 2, 3, 4, 5, 6]</code> functionally.</p>
+          <ol class="wtrace">
+            <li>filter(lambda x: x % 2 == 0, data) → 2, 4, 6.</li>
+            <li>map(lambda x: x*x, …) → 4, 16, 36.</li>
+            <li>reduce(lambda a, b: a + b, …): 0+4=4, 4+16=20, 20+36=56.</li>
+            <li><b>Result = 56</b> (same as sum(x*x for x in data if x % 2 == 0)).</li>
+          </ol>
+          <p class="wnote"><b>Takeaway:</b> filter selects, map transforms, reduce folds a sequence to a single value. A generator expression is usually the more readable Pythonic form of the same pipeline.</p>
+        </div>
+      </section>
+
       <section class="demo" id="glossary">
         <h2>Key concepts — glossary</h2>
         <p class="cap">A quick reference to the recurring terms used across the program. One- or two-line definitions in the
